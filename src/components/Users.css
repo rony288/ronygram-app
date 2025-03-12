@@ -1,0 +1,29 @@
+.image-icons-container {
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    margin-top: 1%;
+}
+
+.image-icon {
+    margin-right: 2%;
+}
+
+.image-icon img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border-style: solid;
+    border-color: whitesmoke;
+    background-color: whitesmoke;
+    transition: width 0.3s, height 0.3s;
+}
+
+.image-icon img:hover {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border-style: solid;
+    border-color: green;
+    background-color: whitesmoke;
+}

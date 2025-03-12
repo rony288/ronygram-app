@@ -1,0 +1,74 @@
+.navbar-spider {
+    background-color: rgb(43, 40, 40);
+    color: white;
+    display: flex;
+    width: 100w;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 2px 5px rgba (0, 0, 0, 0.1);
+}
+
+.navbar-brand-spider {
+    font-weight: bold;
+}
+
+#nav-title {
+    color: white;
+    margin-left: 20%;
+    font-style: italic;
+    font-size: 1.5rem;
+}
+
+.navbar-toggle {
+    margin-right: 3%;
+}
+
+.navbar-toggle img {
+    width: 45px;
+    height: 45px; /* Adjust height for better visibility */
+    cursor: pointer;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 160px;
+    padding: 8px 0;
+    margin: 2px 0 0;
+    margin-left: 85%;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 6px 12px rgba (0, 0, 0, 0.175);
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 8px 20px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #333;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.dropdown-menu.show {
+    display: block;
+    margin-left: 85%;
+}

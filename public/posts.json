@@ -1,0 +1,38 @@
+[
+    {
+        "id":"1",
+        "user": {
+            "username":"Ronaldkipkemboi",
+            "profile": "images/32-lake-louise.jpg"
+        },
+        "comments":"",
+        "likes":3065,
+        "image":"/images/Pink.jpeg",
+        "description":"The sky is a canvas, and every cloud is a stroke of the brush",
+        "created":"1 sec ago"
+    },
+    {
+        "id":"2",
+        "user": {
+            "username":"Ronaldkipkemboi",
+            "profile": "images/32-lake-louise.jpg"
+        },
+        "comments":"",
+        "likes":150,
+        "image":"/images/Sunrise.jpeg",
+        "description":"Under the open sky",
+        "created":"1 hr ago"
+    },
+    {
+        "id":"3",
+        "user": {
+            "username":"Ronaldkipkemboi",
+            "profile": "images/32-lake-louise.jpg"
+        },
+        "comments":" ",
+        "likes":234,
+        "image":"/images/Sky.jpg",
+        "description":"Painted by the heveans",
+        "created":"3 hrs ago"
+    }
+]
