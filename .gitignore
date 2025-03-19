@@ -10,7 +10,7 @@
 
 # production
 /build
-
+users.json
 
 # misc
 .DS_Store
