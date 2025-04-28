@@ -1,0 +1,19 @@
+[
+    {
+        "username": "Ronaldkemboi",
+        "password": "password123",
+        "profile":"/images/2.jpg"
+    },
+
+    {
+        "username": "Rony",
+        "password": "rony01",
+        "profile":"/images/1.jpg"
+    },
+
+    {
+        "username": "Kim",
+        "password": "gori01",
+        "profile":"/images/3.jpg"
+    }
+]
