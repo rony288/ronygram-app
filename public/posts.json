@@ -34,5 +34,41 @@
         "image":"/images/Mursik.jpeg",
         "description":"Sharing love and Mursik, a taste of home, a bond that grows stronger",
         "created":"3 hrs ago"
+    },
+    {
+        "id":"4",
+        "user": {
+            "username":"Ronaldkipkemboi",
+            "profile": "images/32-lake-louise.jpg"
+        },
+        "comments":" ",
+        "likes":1750,
+        "image":"/images/Chill.jpeg",
+        "description":"With you, every moment feels like magic ❤️,
+        "created":" 2 min ago"
+    },
+    {
+        "id":"5",
+        "user": {
+            "username":"Ronaldkipkemboi",
+            "profile": "images/32-lake-louise.jpg"
+        },
+        "comments":" ",
+        "likes":2030,
+        "image":"/images/Goofy.jpeg",
+        "description":"My favorite place is right next to you.",
+        "created":" 20 sec ago"
+    },
+    {
+        "id":"6",
+        "user": {
+            "username":"Ronaldkipkemboi",
+            "profile": "images/32-lake-louise.jpg"
+        },
+        "comments":" ",
+        "likes":1230,
+        "image":"/images/Easter.jpeg",
+        "description":"Just a couple of lovebirds causing smiles.,
+        "created":"Just now"
     }
 ]
