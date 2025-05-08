@@ -23,7 +23,7 @@ const Navigation = ({username}) => {
             <div className="navbar-toggle">
                 <span>{username}</span>
                 <img className="img-nav" 
-                src={require('../images/Kimkim.jpg')} 
+                src={require('../images/MyLove.jpeg')} 
                 alt="User"
                 onClick={toggleDropdown}/>
                 
