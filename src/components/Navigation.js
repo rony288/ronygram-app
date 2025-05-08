@@ -18,7 +18,7 @@ const Navigation = ({username}) => {
     return (
         <nav className="navbar-spider">
             <div className="navbar-brand-spider">
-                <span id="nav-title"><b>RONY</b>ANGEL</span>
+                <span id="nav-title"><b>RONY &</b> ANGELLEEN</span>
             </div>
             <div className="navbar-toggle">
                 <span>{username}</span>
