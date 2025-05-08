@@ -49,7 +49,7 @@ const Posts = () => {
               <div className="post-form" key={post.id}>
                 <div className="user">
                     <span>
-                        <img className="user" src={require('../images/Kimkim.jpg')}
+                        <img className="user" src={require('../images/MyLove.jpeg')}
                         alt="User Avatar"/>
                     </span>
                         <p className="username">{post.user.username}</p>
