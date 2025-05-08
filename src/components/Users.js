@@ -4,7 +4,7 @@ import './Users.css';
 const Users = () => {
     return (
         <div className="image-icons-container">
-            <div className="image-icon"><img src={require('../images/Kimkim.jpg')} alt="Icon 1"/></div>
+            <div className="image-icon"><img src={require('../images/Kimurgor.jpeg')} alt="Icon 1"/></div>
             <div className="image-icon"><img src={require('../images/2.jpg')} alt="Icon 2"/></div>
             <div className="image-icon"><img src={require('../images/3.jpg')} alt="Icon 3"/></div>
             <div className="image-icon"><img src={require('../images/4.jpg')} alt="Icon 4"/></div>
