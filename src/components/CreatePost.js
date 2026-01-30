@@ -29,6 +29,7 @@ const CreatePost = ({ onPostCreate }) => {
             image: preview || "https://via.placeholder.com/400",
             description: caption,
             likes: 0,
+            comments: [], // <--- THIS IS THE FIX! (It was missing)
             created: "Just now"
         };
 
