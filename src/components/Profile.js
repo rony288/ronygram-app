@@ -1,70 +1,171 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Profile.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faCamera, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const Profile = () => {
-    // We will use your existing image for the grid to show how it looks
-    // In a real app, this would come from your database
-    const profilePosts = [
+    // 1. State for "Edit Mode"
+    const [isEditing, setIsEditing] = useState(false);
+
+    // 2. State for User Data (so we can change it)
+    const [user, setUser] = useState({
+        username: "ronaldkipkemboi",
+        realName: "Ronald Kipkemboi",
+        bio: "Software Engineer 🚀\nBuilding RonyGram with React & ❤️\nCapturing memories in code.",
+        link: "github.com/rony288",
+        avatar: require('../images/MyLove.jpeg') 
+    });
+
+    // 3. State for Posts (Fixed broken links + added functionality)
+    const [myPosts, setMyPosts] = useState([
         { id: 1, img: require('../images/MyLove.jpeg') },
-        { id: 2, img: "https://via.placeholder.com/300" },
-        { id: 3, img: "https://via.placeholder.com/300/0000FF/808080" },
-        { id: 4, img: "https://via.placeholder.com/300/FF0000/FFFFFF" },
+        { id: 2, img: "https://picsum.photos/300/300?random=1" }, // Random reliable image
+        { id: 3, img: "https://picsum.photos/300/300?random=2" },
+        { id: 4, img: "https://picsum.photos/300/300?random=3" },
         { id: 5, img: require('../images/MyLove.jpeg') },
-        { id: 6, img: "https://via.placeholder.com/300/FFFF00/000000" },
-    ];
+        { id: 6, img: "https://picsum.photos/300/300?random=4" },
+    ]);
+
+    // Handle Input Changes
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setUser({ ...user, [name]: value });
+    };
+
+    // Handle Avatar Upload
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setUser({ ...user, avatar: URL.createObjectURL(file) });
+        }
+    };
+
+    // Handle Deleting a Photo
+    const handleDeletePost = (id) => {
+        if (window.confirm("Delete this photo?")) {
+            setMyPosts(myPosts.filter(post => post.id !== id));
+        }
+    };
 
     return (
         <div className="profile-container">
-            {/* Header Section: Avatar & Info */}
+            {/* --- HEADER --- */}
             <header className="profile-header">
                 <div className="profile-image-section">
-                    <img 
-                        src={require('../images/MyLove.jpeg')} 
-                        alt="Profile" 
-                        className="profile-main-img"
-                    />
+                    <div className="avatar-wrapper">
+                        <img 
+                            src={user.avatar} 
+                            alt="Profile" 
+                            className="profile-main-img"
+                        />
+                        {/* Camera Icon shows only in Edit Mode */}
+                        {isEditing && (
+                            <label htmlFor="avatar-upload" className="avatar-edit-overlay">
+                                <FontAwesomeIcon icon={faCamera} />
+                                <input 
+                                    id="avatar-upload" 
+                                    type="file" 
+                                    accept="image/*" 
+                                    onChange={handleImageUpload}
+                                    style={{ display: 'none' }}
+                                />
+                            </label>
+                        )}
+                    </div>
                 </div>
 
                 <div className="profile-info-section">
                     <div className="profile-row-1">
-                        <h2 className="profile-username">ronaldkipkemboi</h2>
-                        <button className="edit-profile-btn">Edit Profile</button>
-                        <FontAwesomeIcon icon={faCog} className="settings-icon" />
+                        {isEditing ? (
+                            <input 
+                                type="text" 
+                                name="username"
+                                value={user.username} 
+                                onChange={handleInputChange}
+                                className="edit-input username-input"
+                            />
+                        ) : (
+                            <h2 className="profile-username">{user.username}</h2>
+                        )}
+
+                        <button 
+                            className={isEditing ? "save-profile-btn" : "edit-profile-btn"}
+                            onClick={() => setIsEditing(!isEditing)}
+                        >
+                            {isEditing ? "Save Profile" : "Edit Profile"}
+                        </button>
+                        
+                        {!isEditing && <FontAwesomeIcon icon={faCog} className="settings-icon" />}
                     </div>
 
                     <div className="profile-row-2">
-                        <span><strong>{profilePosts.length}</strong> posts</span>
+                        <span><strong>{myPosts.length}</strong> posts</span>
                         <span><strong>1.5k</strong> followers</span>
                         <span><strong>342</strong> following</span>
                     </div>
 
                     <div className="profile-row-3">
-                        <h1 className="profile-real-name">Ronald Kipkemboi</h1>
-                        <p className="profile-bio">
-                            Software Engineer 🚀 <br />
-                            Building <b>RonyGram</b> with React & ❤️ <br />
-                            Capturing memories in code.
-                        </p>
-                        <a href="https://github.com/rony288" target="_blank" rel="noopener noreferrer" className="profile-link">
-                            github.com/rony288
-                        </a>
+                        {isEditing ? (
+                            <div className="edit-form">
+                                <input 
+                                    type="text" 
+                                    name="realName"
+                                    value={user.realName} 
+                                    onChange={handleInputChange}
+                                    className="edit-input bold-input"
+                                    placeholder="Full Name"
+                                />
+                                <textarea 
+                                    name="bio"
+                                    value={user.bio} 
+                                    onChange={handleInputChange}
+                                    className="edit-input bio-input"
+                                    rows="3"
+                                    placeholder="Bio"
+                                />
+                                <input 
+                                    type="text" 
+                                    name="link"
+                                    value={user.link} 
+                                    onChange={handleInputChange}
+                                    className="edit-input link-input"
+                                    placeholder="Website"
+                                />
+                            </div>
+                        ) : (
+                            <>
+                                <h1 className="profile-real-name">{user.realName}</h1>
+                                <p className="profile-bio" style={{ whiteSpace: "pre-line" }}>{user.bio}</p>
+                                <a href={`https://${user.link}`} target="_blank" rel="noopener noreferrer" className="profile-link">
+                                    {user.link}
+                                </a>
+                            </>
+                        )}
                     </div>
                 </div>
             </header>
 
-            {/* Divider */}
             <div className="profile-divider"></div>
 
-            {/* Photo Grid */}
+            {/* --- GRID --- */}
             <div className="profile-gallery">
-                {profilePosts.map((post) => (
+                {myPosts.map((post) => (
                     <div key={post.id} className="gallery-item">
                         <img src={post.img} alt="Post" className="gallery-image" />
-                        <div className="gallery-overlay">
-                            <span>❤️ 120</span>
-                        </div>
+                        
+                        {/* Show Trash Icon ONLY in Edit Mode */}
+                        {isEditing ? (
+                            <button 
+                                className="delete-overlay-btn"
+                                onClick={() => handleDeletePost(post.id)}
+                            >
+                                <FontAwesomeIcon icon={faTrash} />
+                            </button>
+                        ) : (
+                            <div className="gallery-overlay">
+                                <span>❤️ {Math.floor(Math.random() * 200)}</span>
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
