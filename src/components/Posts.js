@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComment, faThumbsUp, faTrash, faPaperPlane, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faComment, faHeart, faTrash, faPaperPlane, faTimes } from '@fortawesome/free-solid-svg-icons';
 import './Posts.css';
 import CreatePost from './CreatePost'; 
 
@@ -21,14 +21,11 @@ const Posts = () => {
                 const data = await response.json();
                 
                 const preparedData = data.map((post, postIndex) => {
-                    // SAFETY CHECK: Ensure comments is actually an Array
                     const rawComments = Array.isArray(post.comments) ? post.comments : [];
-
                     return {
                         ...post,
                         comments: rawComments.map((c, i) => ({
                             ...c,
-                            // Ensure every comment has an ID
                             id: c.id || `init-${postIndex}-${i}` 
                         })), 
                         isLiked: false 
@@ -101,13 +98,10 @@ const Posts = () => {
             }
             return post;
         }));
-        
         setCommentInput("");
     };
 
     if (loading) return <div>Loading...</div>;
-    
-    // Improved Error Message
     if (error) return (
         <div style={{ color: 'red', textAlign: 'center', marginTop: '20px' }}>
             <h3>⚠️ Error Loading Feed</h3>
@@ -141,14 +135,17 @@ const Posts = () => {
                     </div>
                     
                     <div className="post-actions">
-                        <span onClick={() => toggleCommentBox(post.id)} className="action-icon">
-                            <FontAwesomeIcon icon={faComment}/> {post.comments.length} Comments
-                        </span>
+                        {/* Like Button */}
                         <span 
                             onClick={() => handleLike(post.id)} 
                             className={`action-icon ${post.isLiked ? 'liked' : ''}`}
                         >
-                            <FontAwesomeIcon icon={faThumbsUp}/> {post.likes} Likes
+                            <FontAwesomeIcon icon={faHeart}/> {post.likes} Likes
+                        </span>
+
+                        {/* Comment Button */}
+                        <span onClick={() => toggleCommentBox(post.id)} className="action-icon">
+                            <FontAwesomeIcon icon={faComment}/> {post.comments.length} Comments
                         </span>
                     </div>
 
@@ -156,7 +153,7 @@ const Posts = () => {
                         <h5 className="post-description">{post.description}</h5>
                         <p className="post-created">{post.created}</p>
 
-                        {/* Comments Section */}
+                        {/* Comments List */}
                         {post.comments.length > 0 && (
                             <div className="comments-section">
                                 {post.comments.map((c) => (
@@ -167,7 +164,6 @@ const Posts = () => {
                                         <button 
                                             className="comment-delete-btn"
                                             onClick={() => handleDeleteComment(post.id, c.id)}
-                                            title="Delete comment"
                                         >
                                             <FontAwesomeIcon icon={faTimes} />
                                         </button>
@@ -176,6 +172,7 @@ const Posts = () => {
                             </div>
                         )}
 
+                        {/* Comment Input */}
                         {activeCommentBox === post.id && (
                             <div className="comment-input-area">
                                 <input 
