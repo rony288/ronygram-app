@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react'; // Fixed: Removed unused {useState, useEffect}
 import './Navigation.css';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faMagnifyingGlass, faUser, faGear, faComment, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'; 
 
 const Navigation = ({username}) => {
+    // You are using React.useState here, so the import above wasn't needed
     const [dropdownVisible, setDropdownVisible] = React.useState(false);
 
     const toggleDropdown = () => {
@@ -46,7 +47,5 @@ const Navigation = ({username}) => {
 
     );
 };
-
-
 
 export default Navigation;
