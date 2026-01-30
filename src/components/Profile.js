@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import './Profile.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faCamera, faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom'; // Import navigation hook
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
-    const navigate = useNavigate(); // Initialize navigation
+    const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);
 
+    // User Data State
     const [user, setUser] = useState({
         username: "ronaldkipkemboi",
         realName: "Ronald Kipkemboi",
@@ -16,6 +17,7 @@ const Profile = () => {
         avatar: require('../images/MyLove.jpeg') 
     });
 
+    // Posts State (with reliable images)
     const [myPosts, setMyPosts] = useState([
         { id: 1, img: require('../images/MyLove.jpeg') },
         { id: 2, img: "https://picsum.photos/300/300?random=1" },
@@ -45,8 +47,8 @@ const Profile = () => {
 
     return (
         <div className="profile-container">
-            {/* --- NEW BACK BUTTON --- */}
-            <button className="back-home-btn" onClick={() => navigate('/')}>
+            {/* --- FIXED BACK BUTTON (Goes to /home) --- */}
+            <button className="back-home-btn" onClick={() => navigate('/home')}>
                 <FontAwesomeIcon icon={faArrowLeft} /> Back to Feed
             </button>
 
@@ -147,6 +149,7 @@ const Profile = () => {
 
             <div className="profile-divider"></div>
 
+            {/* --- PHOTO GRID --- */}
             <div className="profile-gallery">
                 {myPosts.map((post) => (
                     <div key={post.id} className="gallery-item">
