@@ -80,4 +80,16 @@
     padding: 8px 20px;
     font-weight: 400;
     line-height: 1.5;
-    color: #3
+    color: #333;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f8ff; /* Very light blue hover */
+    color: #007bff;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
