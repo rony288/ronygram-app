@@ -34,57 +34,56 @@ const Login = () => {
         }
     };
 
-    // New function to handle guest access
     const handleGuestLogin = () => {
         navigate("/home");
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            {/* Fixed: Use className instead of class in React */}
-            <form className="login-form" onSubmit={handleLogin}>
-                <div>
-                    <label htmlFor="username">Username:</label>
-                    <input 
-                        type="text" 
-                        id="username" 
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)} 
-                        required 
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">Password:</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)} 
-                        required 
-                    />
-                </div>
-                
-                <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                    <button type="submit">Login</button>
+        <div className="login-container">
+            <div className="login-card">
+                <h2>Login</h2>
+                <form className="login-form" onSubmit={handleLogin}>
+                    <div className="form-group">
+                        <label htmlFor="username">Username</label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)} 
+                            required 
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)} 
+                            required 
+                        />
+                    </div>
                     
-                    {/* New Guest Button */}
-                    <button 
-                        type="button" 
-                        onClick={handleGuestLogin}
-                        style={{ backgroundColor: '#6c757d' }} // Optional: Grey color to distinguish it
-                    >
-                        View as Guest
-                    </button>
-                </div>
-            </form>
+                    <div className="button-group">
+                        <button type="submit" className="login-btn">
+                            Login
+                        </button>
+                        <button 
+                            type="button" 
+                            onClick={handleGuestLogin}
+                            className="guest-btn"
+                        >
+                            Guest Mode
+                        </button>
+                    </div>
+                </form>
 
-            {/* Optional: Show credentials helper text */}
-            <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#666' }}>
-                (Demo? Click "View as Guest" to skip login)
-            </p>
+                {error && <p className="error-msg">{error}</p>}
 
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+                <p className="helper-text">
+                    (Demo? Click "Guest Mode" to skip)
+                </p>
+            </div>
         </div>
     );
 };
