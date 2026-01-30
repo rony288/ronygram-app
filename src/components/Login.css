@@ -1,77 +1,102 @@
+/* --- 1. Main Container --- */
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: white;
+    /* CRITICAL: Transparent allows the fancy App background to show through */
+    background-color: transparent; 
 }
 
+/* --- 2. The Login Card --- */
 .login-form {
     background-color: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* Soft modern shadow */
     width: 100%;
     max-width: 400px;
     text-align: center;
+    border: 1px solid rgba(0,0,0,0.05);
 }
 
+.login-form h2 {
+    margin-top: 0;
+    color: #333;
+    font-weight: 700;
+}
+
+/* --- 3. Inputs --- */
 .login-form input {
     width: 100%;
-    padding: 12px;
+    padding: 12px 15px;
     margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: #fafafa;
+    transition: all 0.2s ease;
+    box-sizing: border-box; /* Prevents padding from breaking width */
 }
 
-/* Button Group for Side-by-Side Layout */
+.login-form input:focus {
+    border-color: #a5a5a5;
+    background-color: white;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+}
+
+/* --- 4. Button Layout --- */
 .button-group {
     display: flex;
     gap: 15px;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
-/* Base style for ALL buttons */
 .login-form button {
     flex: 1;
-    padding: 14px;
-    color: white;
+    padding: 12px;
     border: none;
-    border-radius: 6px; /* Slightly rounder for a modern look */
-    font-size: 16px;
-    font-weight: 600; /* Makes text pop */
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease; /* Smoothly animates glow and color */
+    transition: all 0.3s ease;
 }
 
-/* --- GEMINI BLUE STYLE --- */
+/* --- 5. "Gemini Blue" Login Button --- */
 .login-form button[type="submit"] {
-    /* The Gemini Gradient */
     background: linear-gradient(135deg, #4b90ff 0%, #00d4ff 100%);
-    
-    /* The Soft Glow */
+    color: white;
     box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
 }
 
 .login-form button[type="submit"]:hover {
-    /* Shift gradient and increase glow on hover */
     background: linear-gradient(135deg, #0078ff 0%, #00b4d8 100%);
     box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
-    transform: translateY(-2px); /* Slight lift effect */
-}
-
-/* Guest Button (Neutral Grey) */
-.guest-btn {
-    background-color: #6c757d;
-}
-
-.guest-btn:hover {
-    background-color: #5a6268;
     transform: translateY(-2px);
 }
 
+/* --- 6. Guest Button --- */
+.guest-btn {
+    background-color: #f0f2f5;
+    color: #444;
+}
+
+.guest-btn:hover {
+    background-color: #e4e6eb;
+    transform: translateY(-2px);
+}
+
+/* --- 7. Error & Helper Text --- */
 .error-message {
-    color: red;
+    color: #ed4956;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+p {
+    font-size: 0.9rem;
+    color: #8e8e8e;
+    margin-top: 20px;
 }
