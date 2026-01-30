@@ -1,0 +1,188 @@
+/* Container */
+.profile-container {
+    max-width: 935px; /* Standard Instagram width */
+    margin: 0 auto;
+    padding: 30px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* --- HEADER SECTION --- */
+.profile-header {
+    display: flex;
+    margin-bottom: 44px;
+}
+
+/* Avatar Area */
+.profile-image-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    margin-right: 30px;
+}
+
+.profile-main-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #dbdbdb;
+    padding: 4px; /* White space between border and image */
+}
+
+/* Info Area */
+.profile-info-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Row 1: Username & Button */
+.profile-row-1 {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-username {
+    font-size: 28px;
+    font-weight: 300;
+    margin: 0;
+}
+
+.edit-profile-btn {
+    background: transparent;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    padding: 5px 9px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.edit-profile-btn:hover {
+    background-color: #fafafa;
+}
+
+.settings-icon {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Row 2: Stats */
+.profile-row-2 {
+    display: flex;
+    gap: 40px;
+    font-size: 16px;
+}
+
+/* Row 3: Bio */
+.profile-row-3 {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.profile-real-name {
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0;
+}
+
+.profile-bio {
+    margin: 5px 0;
+}
+
+.profile-link {
+    color: #00376b;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* --- GRID SECTION --- */
+.profile-divider {
+    border-top: 1px solid #dbdbdb;
+    margin-bottom: 20px;
+}
+
+.profile-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 Columns always */
+    gap: 28px;
+}
+
+.gallery-item {
+    position: relative;
+    width: 100%;
+    /* Make it a perfect square */
+    padding-bottom: 100%; 
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.gallery-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Hover Effect (Overlay) */
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 735px) {
+    .profile-header {
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+    
+    .profile-image-section {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .profile-main-img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .profile-info-section {
+        align-items: flex-start;
+        padding-left: 10px;
+    }
+
+    .profile-row-2 {
+        gap: 20px;
+        font-size: 14px;
+        width: 100%;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-top: 1px solid #efefef;
+        border-bottom: 1px solid #efefef;
+    }
+    
+    .profile-gallery {
+        gap: 3px; /* Tighter grid on mobile */
+    }
+}
