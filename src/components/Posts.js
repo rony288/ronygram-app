@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComment, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faComment, faThumbsUp, faTrash } from '@fortawesome/free-solid-svg-icons'; // Import faTrash
 import './Posts.css';
-// 1. Import the new component
 import CreatePost from './CreatePost'; 
 
 const Posts = () => {
@@ -10,6 +9,7 @@ const Posts = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Fetch initial posts
     useEffect(() => {
         const controller = new AbortController();
         const fetchPosts = async () => {
@@ -28,9 +28,21 @@ const Posts = () => {
         return () => controller.abort();
     }, []);
 
-    // 2. Function to add the new post to the list
+    // Handle creating a new post
     const handleNewPost = (newPost) => {
-        setPosts([newPost, ...posts]); // Puts new post at the top
+        setPosts([newPost, ...posts]);
+    };
+
+    // --- NEW: Handle Deleting a Post ---
+    const handleDelete = (id) => {
+        // 1. Ask for confirmation
+        const isConfirmed = window.confirm("Are you sure you want to delete this post?");
+        
+        // 2. If they say "OK", delete it
+        if (isConfirmed) {
+            const updatedPosts = posts.filter((post) => post.id !== id);
+            setPosts(updatedPosts);
+        }
     };
 
     if (loading) return <div>Loading...</div>;
@@ -38,23 +50,33 @@ const Posts = () => {
 
     return (
         <div className="posts-container">
-            {/* 3. Render the CreatePost component at the top */}
             <CreatePost onPostCreate={handleNewPost} />
 
             {posts.map((post) => (
                 <div className="post-form" key={post.id}>
                     <div className="user">
-                        <span>
-                            <img 
-                                className="user" 
-                                src={post.user.avatar || require('../images/MyLove.jpeg')}
-                                alt="Avatar"
-                                onError={(e) => {e.target.src = require('../images/MyLove.jpeg')}}
-                            />
-                        </span>
-                        <p className="username">{post.user.username}</p>
+                        <div className="user-info">
+                            <span>
+                                <img 
+                                    className="user" 
+                                    src={post.user.avatar || require('../images/MyLove.jpeg')}
+                                    alt="Avatar"
+                                    onError={(e) => {e.target.src = require('../images/MyLove.jpeg')}}
+                                />
+                            </span>
+                            <p className="username">{post.user.username}</p>
+                        </div>
+
+                        {/* Delete Button */}
+                        <button 
+                            className="delete-btn" 
+                            onClick={() => handleDelete(post.id)}
+                            title="Delete Post"
+                        >
+                            <FontAwesomeIcon icon={faTrash} />
+                        </button>
                     </div>
-                    {/* ... The rest of your card code is the same ... */}
+
                     <div className="row">
                         <div className="col s12 m7">
                             <div className="card post-item">
