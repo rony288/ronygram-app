@@ -1,237 +1,89 @@
-/* Container */
-.profile-container {
-    max-width: 935px;
-    margin: 0 auto;
-    padding: 30px 20px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: #262626;
+/* --- EDIT MODE STYLES --- */
+
+/* 1. Input Fields */
+.edit-input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    font-size: 14px;
+    background: #fafafa;
 }
 
-/* --- HEADER SECTION --- */
-.profile-header {
-    display: flex;
-    margin-bottom: 44px;
-    align-items: center; /* Vertically center the avatar with info */
-}
-
-/* Avatar Area */
-.profile-image-section {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    margin-right: 30px;
-}
-
-.profile-main-img {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    object-fit: cover;
-    padding: 4px; /* Space between image and ring */
-    /* THE GEMINI BLUE RING */
-    border: 3px solid transparent; 
-    background: linear-gradient(white, white) padding-box,
-                linear-gradient(135deg, #4b90ff 0%, #00d4ff 100%) border-box;
-    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2); /* Soft glow */
-}
-
-/* Info Area */
-.profile-info-section {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-/* Row 1: Username & Button */
-.profile-row-1 {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.profile-username {
-    font-size: 28px;
+.username-input {
+    font-size: 20px;
     font-weight: 300;
+    width: auto;
     margin: 0;
 }
 
-/* GEMINI BUTTON STYLE */
-.edit-profile-btn {
-    background: linear-gradient(135deg, #4b90ff 0%, #00d4ff 100%);
+.bold-input {
+    font-weight: 600;
+}
+
+.bio-input {
+    resize: none; /* Prevent manual resizing */
+    font-family: inherit;
+}
+
+/* 2. Save Button (Different Color) */
+.save-profile-btn {
+    background: #0095f6; /* Official Instagram Blue */
     color: white;
     border: none;
-    border-radius: 20px; /* Rounded pill shape */
-    padding: 8px 24px;
+    border-radius: 4px;
+    padding: 5px 15px;
     font-weight: 600;
     cursor: pointer;
-    font-size: 14px;
-    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.edit-profile-btn:hover {
-    transform: translateY(-2px); /* Lifts up slightly */
-    box-shadow: 0 4px 10px rgba(0, 212, 255, 0.4); /* Glow effect */
-}
-
-.settings-icon {
-    font-size: 24px;
-    cursor: pointer;
-    color: #262626;
-    transition: transform 0.2s;
-}
-
-.settings-icon:hover {
-    transform: rotate(90deg); /* Spins when you hover! */
-}
-
-/* Row 2: Stats */
-.profile-row-2 {
-    display: flex;
-    gap: 40px;
-    font-size: 16px;
-}
-
-.profile-row-2 strong {
-    color: #262626;
-    font-weight: 600;
-}
-
-/* Row 3: Bio */
-.profile-row-3 {
-    font-size: 16px;
-    line-height: 1.6;
-}
-
-.profile-real-name {
-    font-weight: 700;
-    font-size: 17px;
-    margin: 0 0 4px 0;
-}
-
-.profile-bio {
-    margin: 0;
-}
-
-.profile-link {
-    color: #00376b; /* Classic dark blue link */
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-block;
-    margin-top: 5px;
-}
-
-.profile-link:hover {
-    text-decoration: underline;
-}
-
-/* --- GRID SECTION --- */
-.profile-divider {
-    border-top: 1px solid #dbdbdb;
-    margin-bottom: 20px;
-}
-
-.profile-gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 Columns */
-    gap: 20px; /* Space between photos */
-}
-
-.gallery-item {
+/* 3. Avatar Edit Overlay (Camera Icon) */
+.avatar-wrapper {
     position: relative;
-    width: 100%;
-    padding-bottom: 100%; /* Keeps it a perfect square */
-    overflow: hidden;
-    border-radius: 8px; /* Slightly rounded corners */
-    background-color: #f0f0f0; /* Grey background for loading/broken images */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    width: 160px;
+    height: 160px;
 }
 
-.gallery-image {
+.avatar-edit-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-/* Zoom effect on hover */
-.gallery-item:hover .gallery-image {
-    transform: scale(1.05);
-}
-
-/* Overlay (Heart Count) */
-.gallery-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4); /* Dark see-through overlay */
-    color: white;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); /* Dark tint */
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0;
-    transition: opacity 0.2s;
-    font-weight: bold;
-    font-size: 20px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    opacity: 0.8;
 }
 
-.gallery-item:hover .gallery-overlay {
+.avatar-edit-overlay:hover {
     opacity: 1;
 }
 
-/* --- MOBILE RESPONSIVENESS --- */
-@media (max-width: 735px) {
-    .profile-header {
-        flex-direction: column;
-        align-items: flex-start;
-        margin-bottom: 20px;
-    }
-    
-    .profile-image-section {
-        margin-right: 0;
-        margin-bottom: 15px;
-        width: 100%;
-        justify-content: flex-start; /* Align left on mobile */
-    }
+/* 4. Delete Button on Photos */
+.delete-overlay-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: white;
+    color: red;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
 
-    .profile-main-img {
-        width: 80px;
-        height: 80px;
-    }
-
-    .profile-info-section {
-        width: 100%;
-        gap: 15px;
-    }
-
-    .profile-row-1 {
-        /* On mobile, put username on top, button below */
-        flex-wrap: wrap; 
-    }
-
-    .edit-profile-btn {
-        width: 100%; /* Full width button on mobile */
-        text-align: center;
-    }
-
-    .profile-row-2 {
-        justify-content: space-between;
-        padding: 10px 0;
-        border-top: 1px solid #efefef;
-        border-bottom: 1px solid #efefef;
-        width: 100%;
-    }
-    
-    .profile-gallery {
-        gap: 3px; /* Tighter grid on mobile */
-    }
-    
-    .gallery-item {
-        border-radius: 0; /* No rounded corners on mobile grid for tight fit */
-    }
+.delete-overlay-btn:hover {
+    background: red;
+    color: white;
 }
