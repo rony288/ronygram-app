@@ -20,15 +20,20 @@ const Posts = () => {
                 if (!response.ok) throw new Error('Failed to fetch');
                 const data = await response.json();
                 
-                const preparedData = data.map((post, postIndex) => ({
-                    ...post,
-                    // Ensure every comment has a unique ID (using index as fallback)
-                    comments: (post.comments || []).map((c, i) => ({
-                        ...c,
-                        id: c.id || `init-${postIndex}-${i}` 
-                    })), 
-                    isLiked: false 
-                }));
+                const preparedData = data.map((post, postIndex) => {
+                    // SAFETY CHECK: Ensure comments is actually an Array
+                    const rawComments = Array.isArray(post.comments) ? post.comments : [];
+
+                    return {
+                        ...post,
+                        comments: rawComments.map((c, i) => ({
+                            ...c,
+                            // Ensure every comment has an ID
+                            id: c.id || `init-${postIndex}-${i}` 
+                        })), 
+                        isLiked: false 
+                    };
+                });
                 
                 setPosts([...preparedData].reverse());
             } catch (err) {
@@ -61,13 +66,11 @@ const Posts = () => {
         }));
     };
 
-    // --- NEW: Handle Deleting a Specific Comment ---
     const handleDeleteComment = (postId, commentId) => {
         setPosts(posts.map(post => {
             if (post.id === postId) {
                 return {
                     ...post,
-                    // Keep only the comments that DO NOT match the ID we want to delete
                     comments: post.comments.filter(c => c.id !== commentId)
                 };
             }
@@ -89,7 +92,6 @@ const Posts = () => {
 
         setPosts(posts.map(post => {
             if (post.id === id) {
-                // Create new comment with a unique ID based on time
                 const newComment = { 
                     id: Date.now(), 
                     user: "Me", 
@@ -104,7 +106,14 @@ const Posts = () => {
     };
 
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    
+    // Improved Error Message
+    if (error) return (
+        <div style={{ color: 'red', textAlign: 'center', marginTop: '20px' }}>
+            <h3>⚠️ Error Loading Feed</h3>
+            <p>{error}</p>
+        </div>
+    );
 
     return (
         <div className="posts-container">
@@ -147,7 +156,7 @@ const Posts = () => {
                         <h5 className="post-description">{post.description}</h5>
                         <p className="post-created">{post.created}</p>
 
-                        {/* Updated Comments Section */}
+                        {/* Comments Section */}
                         {post.comments.length > 0 && (
                             <div className="comments-section">
                                 {post.comments.map((c) => (
@@ -155,7 +164,6 @@ const Posts = () => {
                                         <p className="comment-text">
                                             <strong>{c.user}: </strong> {c.text}
                                         </p>
-                                        {/* Small 'x' button to delete comment */}
                                         <button 
                                             className="comment-delete-btn"
                                             onClick={() => handleDeleteComment(post.id, c.id)}
