@@ -1,5 +1,5 @@
 .login-container {
-    display: flex; /* Fixed: 'flexbox' is not valid, changed to 'flex' */
+    display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -10,7 +10,7 @@
     background-color: white;
     padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Fixed spacing in rgba */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
     text-align: center;
@@ -26,41 +26,50 @@
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* --- NEW: Button Group for Side-by-Side Layout --- */
+/* Button Group for Side-by-Side Layout */
 .button-group {
     display: flex;
-    gap: 15px; /* Space between buttons */
+    gap: 15px;
     margin-top: 15px;
 }
 
 /* Base style for ALL buttons */
 .login-form button {
-    flex: 1; /* Makes both buttons equal width */
+    flex: 1;
     padding: 14px;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px; /* Slightly rounder for a modern look */
     font-size: 16px;
+    font-weight: 600; /* Makes text pop */
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease; /* Smoothly animates glow and color */
 }
 
-/* Primary Login Button (Your original Red) */
+/* --- GEMINI BLUE STYLE --- */
 .login-form button[type="submit"] {
-    background-color: #772323;
+    /* The Gemini Gradient */
+    background: linear-gradient(135deg, #4b90ff 0%, #00d4ff 100%);
+    
+    /* The Soft Glow */
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
 }
 
 .login-form button[type="submit"]:hover {
-    background-color: #5a1a1a; /* Darker red on hover (looks better than green) */
+    /* Shift gradient and increase glow on hover */
+    background: linear-gradient(135deg, #0078ff 0%, #00b4d8 100%);
+    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+    transform: translateY(-2px); /* Slight lift effect */
 }
 
-/* Guest Button (Grey) */
+/* Guest Button (Neutral Grey) */
 .guest-btn {
     background-color: #6c757d;
 }
 
 .guest-btn:hover {
     background-color: #5a6268;
+    transform: translateY(-2px);
 }
 
 .error-message {
