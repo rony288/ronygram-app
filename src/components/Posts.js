@@ -9,11 +9,9 @@ const Posts = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // State to track which post has its comment box open
     const [activeCommentBox, setActiveCommentBox] = useState(null);
     const [commentInput, setCommentInput] = useState("");
 
-    // Fetch initial posts
     useEffect(() => {
         const controller = new AbortController();
         const fetchPosts = async () => {
@@ -22,7 +20,6 @@ const Posts = () => {
                 if (!response.ok) throw new Error('Failed to fetch');
                 const data = await response.json();
                 
-                // Add "isLiked" and empty "comments" array to each post so we can change them later
                 const preparedData = data.map(post => ({
                     ...post,
                     comments: [], 
@@ -50,11 +47,9 @@ const Posts = () => {
         }
     };
 
-    // --- NEW: Handle Like Click ---
     const handleLike = (id) => {
         setPosts(posts.map(post => {
             if (post.id === id) {
-                // If it is already liked, subtract 1. If not, add 1.
                 const newLikes = post.isLiked ? post.likes - 1 : post.likes + 1;
                 return { ...post, likes: newLikes, isLiked: !post.isLiked };
             }
@@ -62,19 +57,17 @@ const Posts = () => {
         }));
     };
 
-    // --- NEW: Toggle Comment Box ---
     const toggleCommentBox = (id) => {
         if (activeCommentBox === id) {
-            setActiveCommentBox(null); // Close it if it's already open
+            setActiveCommentBox(null);
         } else {
-            setActiveCommentBox(id); // Open this specific one
-            setCommentInput(""); // Clear the text
+            setActiveCommentBox(id);
+            setCommentInput("");
         }
     };
 
-    // --- NEW: Submit a Comment ---
     const submitComment = (id) => {
-        if (!commentInput.trim()) return; // Don't allow empty comments
+        if (!commentInput.trim()) return;
 
         setPosts(posts.map(post => {
             if (post.id === id) {
@@ -84,7 +77,7 @@ const Posts = () => {
             return post;
         }));
         
-        setCommentInput(""); // Clear input after posting
+        setCommentInput("");
     };
 
     if (loading) return <div>Loading...</div>;
@@ -95,17 +88,16 @@ const Posts = () => {
             <CreatePost onPostCreate={handleNewPost} />
 
             {posts.map((post) => (
-                <div className="post-form" key={post.id}>
-                    <div className="user">
+                <div className="post-card" key={post.id}>
+                    {/* Header */}
+                    <div className="post-header">
                         <div className="user-info">
-                            <span>
-                                <img 
-                                    className="user" 
-                                    src={post.user.avatar || require('../images/MyLove.jpeg')}
-                                    alt="Avatar"
-                                    onError={(e) => {e.target.src = require('../images/MyLove.jpeg')}}
-                                />
-                            </span>
+                            <img 
+                                className="user-avatar" 
+                                src={post.user.avatar || require('../images/MyLove.jpeg')}
+                                alt="Avatar"
+                                onError={(e) => {e.target.src = require('../images/MyLove.jpeg')}}
+                            />
                             <p className="username">{post.user.username}</p>
                         </div>
                         <button className="delete-btn" onClick={() => handleDelete(post.id)}>
@@ -113,60 +105,55 @@ const Posts = () => {
                         </button>
                     </div>
 
-                    <div className="row">
-                        <div className="col s12 m7">
-                            <div className="card post-item">
-                                <div className="card-image">
-                                    <img className="post-image" src={post.image} alt="Post" />
-                                </div>
-                                
-                                {/* INTERACTION BUTTONS */}
-                                <div className="card-comment-like">
-                                    <span onClick={() => toggleCommentBox(post.id)} className="action-icon">
-                                        <FontAwesomeIcon icon={faComment}/> {post.comments.length} Comments
-                                    </span>
-                                    
-                                    <span 
-                                        onClick={() => handleLike(post.id)} 
-                                        className={`action-icon ${post.isLiked ? 'liked' : ''}`}
-                                    >
-                                        <FontAwesomeIcon icon={faThumbsUp}/> {post.likes} Likes
-                                    </span>
-                                </div>
+                    {/* Image */}
+                    <div className="post-image-container">
+                        <img className="post-image" src={post.image} alt="Post" />
+                    </div>
+                    
+                    {/* Actions */}
+                    <div className="post-actions">
+                        <span onClick={() => toggleCommentBox(post.id)} className="action-icon">
+                            <FontAwesomeIcon icon={faComment}/> {post.comments.length} Comments
+                        </span>
+                        <span 
+                            onClick={() => handleLike(post.id)} 
+                            className={`action-icon ${post.isLiked ? 'liked' : ''}`}
+                        >
+                            <FontAwesomeIcon icon={faThumbsUp}/> {post.likes} Likes
+                        </span>
+                    </div>
 
-                                <div className="card-content">
-                                    <h5 className="post-description">{post.description}</h5>
-                                    <p className="post-created">{post.created}</p>
+                    {/* Content */}
+                    <div className="post-content">
+                        <h5 className="post-description">{post.description}</h5>
+                        <p className="post-created">{post.created}</p>
 
-                                    {/* SHOW COMMENTS */}
-                                    {post.comments.length > 0 && (
-                                        <div className="comments-section">
-                                            {post.comments.map((c, index) => (
-                                                <p key={index} className="comment-text">
-                                                    <strong>{c.user}: </strong> {c.text}
-                                                </p>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {/* COMMENT INPUT BOX */}
-                                    {activeCommentBox === post.id && (
-                                        <div className="comment-input-area">
-                                            <input 
-                                                type="text" 
-                                                placeholder="Add a comment..."
-                                                value={commentInput}
-                                                onChange={(e) => setCommentInput(e.target.value)}
-                                                onKeyDown={(e) => e.key === 'Enter' && submitComment(post.id)}
-                                            />
-                                            <button onClick={() => submitComment(post.id)}>
-                                                <FontAwesomeIcon icon={faPaperPlane} />
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
+                        {/* Comments */}
+                        {post.comments.length > 0 && (
+                            <div className="comments-section">
+                                {post.comments.map((c, index) => (
+                                    <p key={index} className="comment-text">
+                                        <strong>{c.user}: </strong> {c.text}
+                                    </p>
+                                ))}
                             </div>
-                        </div>
+                        )}
+
+                        {/* Input */}
+                        {activeCommentBox === post.id && (
+                            <div className="comment-input-area">
+                                <input 
+                                    type="text" 
+                                    placeholder="Add a comment..."
+                                    value={commentInput}
+                                    onChange={(e) => setCommentInput(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && submitComment(post.id)}
+                                />
+                                <button onClick={() => submitComment(post.id)}>
+                                    <FontAwesomeIcon icon={faPaperPlane} />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             ))}
