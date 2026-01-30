@@ -1,41 +1,140 @@
-/* Make icons clickable */
+/* Container for the whole page */
+.posts-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #fafafa;
+    min-height: 100vh;
+}
+
+/* The Main Post Card */
+.post-card {
+    background-color: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 600px; /* STRICT LIMIT: This prevents the huge image issue */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+/* Header (User Info) */
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #efefef;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e1e1e1;
+}
+
+.username {
+    font-weight: 600;
+    font-size: 14px;
+    color: #262626;
+    margin: 0;
+}
+
+/* Image Handling */
+.post-image-container {
+    width: 100%;
+    background-color: #efefef;
+}
+
+.post-image {
+    width: 100%;       /* Fills the card width */
+    height: auto;      /* Maintains aspect ratio */
+    max-height: 600px; /* Prevents extremely tall images */
+    object-fit: cover; /* Crops neatly if needed */
+    display: block;
+}
+
+/* Action Buttons (Like/Comment) */
+.post-actions {
+    padding: 12px 16px;
+    display: flex;
+    gap: 20px;
+}
+
 .action-icon {
     cursor: pointer;
-    margin-right: 15px;
-    transition: transform 0.2s ease, color 0.2s ease;
-    user-select: none; /* Prevents text selection when clicking fast */
-    display: inline-flex;
+    font-weight: 600;
+    color: #4b90ff; /* Gemini Blue */
+    display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
+    transition: transform 0.2s;
 }
 
 .action-icon:hover {
-    transform: scale(1.1); /* Slight pop effect */
+    transform: scale(1.1);
 }
 
-/* The Blue "Liked" State */
 .action-icon.liked {
-    color: #00d4ff; /* Gemini Blue */
-    font-weight: bold;
+    color: #00d4ff; /* Brighter Blue */
 }
 
-/* Comment Section */
-.comments-section {
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid #eee;
+/* Text Content */
+.post-content {
+    padding: 0 16px 16px 16px;
+}
+
+.post-description {
     font-size: 14px;
+    color: #262626;
+    margin: 0 0 8px 0;
+    line-height: 1.5;
+}
+
+.post-created {
+    font-size: 12px;
+    color: #8e8e8e;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+/* Delete Button */
+.delete-btn {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.delete-btn:hover {
+    color: #ff4b4b;
+}
+
+/* Comments Section */
+.comments-section {
     background: #f9f9f9;
     padding: 10px;
     border-radius: 8px;
+    margin-top: 10px;
 }
 
 .comment-text {
-    margin: 5px 0;
-    color: #333;
+    font-size: 13px;
+    margin: 4px 0;
 }
 
-/* Comment Input Area */
 .comment-input-area {
     display: flex;
     margin-top: 10px;
@@ -44,21 +143,16 @@
 
 .comment-input-area input {
     flex: 1;
-    padding: 10px;
+    padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 20px;
     outline: none;
-    transition: border-color 0.3s;
-}
-
-.comment-input-area input:focus {
-    border-color: #4b90ff; /* Blue border when typing */
 }
 
 .comment-input-area button {
     background: none;
     border: none;
     color: #4b90ff;
-    font-size: 18px;
     cursor: pointer;
+    font-size: 18px;
 }
