@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComment, faThumbsUp, faTrash, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faComment, faThumbsUp, faTrash, faPaperPlane, faTimes } from '@fortawesome/free-solid-svg-icons';
 import './Posts.css';
 import CreatePost from './CreatePost'; 
 
@@ -20,9 +20,13 @@ const Posts = () => {
                 if (!response.ok) throw new Error('Failed to fetch');
                 const data = await response.json();
                 
-                const preparedData = data.map(post => ({
+                const preparedData = data.map((post, postIndex) => ({
                     ...post,
-                    comments: [], 
+                    // Ensure every comment has a unique ID (using index as fallback)
+                    comments: (post.comments || []).map((c, i) => ({
+                        ...c,
+                        id: c.id || `init-${postIndex}-${i}` 
+                    })), 
                     isLiked: false 
                 }));
                 
@@ -57,6 +61,20 @@ const Posts = () => {
         }));
     };
 
+    // --- NEW: Handle Deleting a Specific Comment ---
+    const handleDeleteComment = (postId, commentId) => {
+        setPosts(posts.map(post => {
+            if (post.id === postId) {
+                return {
+                    ...post,
+                    // Keep only the comments that DO NOT match the ID we want to delete
+                    comments: post.comments.filter(c => c.id !== commentId)
+                };
+            }
+            return post;
+        }));
+    };
+
     const toggleCommentBox = (id) => {
         if (activeCommentBox === id) {
             setActiveCommentBox(null);
@@ -71,7 +89,12 @@ const Posts = () => {
 
         setPosts(posts.map(post => {
             if (post.id === id) {
-                const newComment = { user: "Me", text: commentInput };
+                // Create new comment with a unique ID based on time
+                const newComment = { 
+                    id: Date.now(), 
+                    user: "Me", 
+                    text: commentInput 
+                };
                 return { ...post, comments: [...post.comments, newComment] };
             }
             return post;
@@ -89,7 +112,6 @@ const Posts = () => {
 
             {posts.map((post) => (
                 <div className="post-card" key={post.id}>
-                    {/* Header */}
                     <div className="post-header">
                         <div className="user-info">
                             <img 
@@ -105,12 +127,10 @@ const Posts = () => {
                         </button>
                     </div>
 
-                    {/* Image */}
                     <div className="post-image-container">
                         <img className="post-image" src={post.image} alt="Post" />
                     </div>
                     
-                    {/* Actions */}
                     <div className="post-actions">
                         <span onClick={() => toggleCommentBox(post.id)} className="action-icon">
                             <FontAwesomeIcon icon={faComment}/> {post.comments.length} Comments
@@ -123,23 +143,31 @@ const Posts = () => {
                         </span>
                     </div>
 
-                    {/* Content */}
                     <div className="post-content">
                         <h5 className="post-description">{post.description}</h5>
                         <p className="post-created">{post.created}</p>
 
-                        {/* Comments */}
+                        {/* Updated Comments Section */}
                         {post.comments.length > 0 && (
                             <div className="comments-section">
-                                {post.comments.map((c, index) => (
-                                    <p key={index} className="comment-text">
-                                        <strong>{c.user}: </strong> {c.text}
-                                    </p>
+                                {post.comments.map((c) => (
+                                    <div key={c.id} className="comment-row">
+                                        <p className="comment-text">
+                                            <strong>{c.user}: </strong> {c.text}
+                                        </p>
+                                        {/* Small 'x' button to delete comment */}
+                                        <button 
+                                            className="comment-delete-btn"
+                                            onClick={() => handleDeleteComment(post.id, c.id)}
+                                            title="Delete comment"
+                                        >
+                                            <FontAwesomeIcon icon={faTimes} />
+                                        </button>
+                                    </div>
                                 ))}
                             </div>
                         )}
 
-                        {/* Input */}
                         {activeCommentBox === post.id && (
                             <div className="comment-input-area">
                                 <input 
