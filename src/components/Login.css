@@ -1,5 +1,5 @@
 .login-container {
-    display: flexbox;
+    display: flex; /* Fixed: 'flexbox' is not valid, changed to 'flex' */
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -10,7 +10,7 @@
     background-color: white;
     padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba (0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Fixed spacing in rgba */
     width: 100%;
     max-width: 400px;
     text-align: center;
@@ -26,19 +26,41 @@
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* --- NEW: Button Group for Side-by-Side Layout --- */
+.button-group {
+    display: flex;
+    gap: 15px; /* Space between buttons */
+    margin-top: 15px;
+}
+
+/* Base style for ALL buttons */
 .login-form button {
-    width: 100%;
+    flex: 1; /* Makes both buttons equal width */
     padding: 14px;
-    background-color: #772323;
     color: white;
     border: none;
     border-radius: 4px;
     font-size: 16px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.login-form button:hover {
-    background-color: #45a049;
+/* Primary Login Button (Your original Red) */
+.login-form button[type="submit"] {
+    background-color: #772323;
+}
+
+.login-form button[type="submit"]:hover {
+    background-color: #5a1a1a; /* Darker red on hover (looks better than green) */
+}
+
+/* Guest Button (Grey) */
+.guest-btn {
+    background-color: #6c757d;
+}
+
+.guest-btn:hover {
+    background-color: #5a6268;
 }
 
 .error-message {
