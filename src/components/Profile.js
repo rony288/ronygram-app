@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import './Profile.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faCamera, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faCamera, faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom'; // Import navigation hook
 
 const Profile = () => {
-    // 1. State for "Edit Mode"
+    const navigate = useNavigate(); // Initialize navigation
     const [isEditing, setIsEditing] = useState(false);
 
-    // 2. State for User Data (so we can change it)
     const [user, setUser] = useState({
         username: "ronaldkipkemboi",
         realName: "Ronald Kipkemboi",
@@ -16,23 +16,20 @@ const Profile = () => {
         avatar: require('../images/MyLove.jpeg') 
     });
 
-    // 3. State for Posts (Fixed broken links + added functionality)
     const [myPosts, setMyPosts] = useState([
         { id: 1, img: require('../images/MyLove.jpeg') },
-        { id: 2, img: "https://picsum.photos/300/300?random=1" }, // Random reliable image
+        { id: 2, img: "https://picsum.photos/300/300?random=1" },
         { id: 3, img: "https://picsum.photos/300/300?random=2" },
         { id: 4, img: "https://picsum.photos/300/300?random=3" },
         { id: 5, img: require('../images/MyLove.jpeg') },
         { id: 6, img: "https://picsum.photos/300/300?random=4" },
     ]);
 
-    // Handle Input Changes
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setUser({ ...user, [name]: value });
     };
 
-    // Handle Avatar Upload
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -40,7 +37,6 @@ const Profile = () => {
         }
     };
 
-    // Handle Deleting a Photo
     const handleDeletePost = (id) => {
         if (window.confirm("Delete this photo?")) {
             setMyPosts(myPosts.filter(post => post.id !== id));
@@ -49,6 +45,11 @@ const Profile = () => {
 
     return (
         <div className="profile-container">
+            {/* --- NEW BACK BUTTON --- */}
+            <button className="back-home-btn" onClick={() => navigate('/')}>
+                <FontAwesomeIcon icon={faArrowLeft} /> Back to Feed
+            </button>
+
             {/* --- HEADER --- */}
             <header className="profile-header">
                 <div className="profile-image-section">
@@ -58,7 +59,6 @@ const Profile = () => {
                             alt="Profile" 
                             className="profile-main-img"
                         />
-                        {/* Camera Icon shows only in Edit Mode */}
                         {isEditing && (
                             <label htmlFor="avatar-upload" className="avatar-edit-overlay">
                                 <FontAwesomeIcon icon={faCamera} />
@@ -147,13 +147,10 @@ const Profile = () => {
 
             <div className="profile-divider"></div>
 
-            {/* --- GRID --- */}
             <div className="profile-gallery">
                 {myPosts.map((post) => (
                     <div key={post.id} className="gallery-item">
                         <img src={post.img} alt="Post" className="gallery-image" />
-                        
-                        {/* Show Trash Icon ONLY in Edit Mode */}
                         {isEditing ? (
                             <button 
                                 className="delete-overlay-btn"
