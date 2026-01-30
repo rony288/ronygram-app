@@ -24,12 +24,12 @@ const CreatePost = ({ onPostCreate }) => {
             id: Date.now(),
             user: {
                 username: "Ronaldkipkemboi",
-                avatar: require('../images/MyLove.jpeg') // Make sure this path is correct!
+                avatar: require('../images/MyLove.jpeg')
             },
             image: preview || "https://via.placeholder.com/400",
             description: caption,
             likes: 0,
-            comments: [], // <--- THIS IS THE FIX! (It was missing)
+            comments: [], // <--- THIS LINE IS CRITICAL! DO NOT FORGET IT.
             created: "Just now"
         };
 
@@ -43,7 +43,6 @@ const CreatePost = ({ onPostCreate }) => {
         <div className="create-post-card">
             <form onSubmit={handleSubmit}>
                 <div className="input-group">
-                    {/* User Avatar Bubble */}
                     <img 
                         src={require('../images/MyLove.jpeg')} 
                         alt="Me" 
