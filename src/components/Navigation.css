@@ -1,15 +1,20 @@
 .navbar-spider {
-    background-color: rgb(43, 40, 40);
+    /* Gemini Blue Gradient */
+    background: linear-gradient(135deg, #4b90ff 0%, #00d4ff 100%);
     color: white;
+    
+    /* Layout */
     display: flex;
-    width: 100w;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    box-shadow: 0 2px 5px rgba (0, 0, 0, 0.1);
+    width: 100%;
+    
+    /* Sticky Positioning & Glow */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
 }
 
 .navbar-brand-spider {
@@ -18,40 +23,56 @@
 
 #nav-title {
     color: white;
-    margin-left: 20%;
+    /* Removed large margin so it aligns cleanly on the left */
+    margin-left: 10px; 
     font-style: italic;
     font-size: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Shadow makes text readable on blue */
 }
 
 .navbar-toggle {
     margin-right: 3%;
+    position: relative; /* anchors the dropdown to the image */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* space between username and image */
 }
 
 .navbar-toggle img {
     width: 45px;
-    height: 45px; /* Adjust height for better visibility */
+    height: 45px;
     cursor: pointer;
     border-radius: 50%;
     overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.8); /* White ring around avatar */
+    transition: transform 0.2s;
 }
 
+.navbar-toggle img:hover {
+    transform: scale(1.05); /* Zoom effect on hover */
+}
+
+/* Dropdown Menu */
 .dropdown-menu {
     position: absolute;
-    top: calc(100% + 5px);
-    left: 0;
+    top: 120%; /* Pushes it slightly below the image */
+    right: 0; /* Aligns to the right side of the container */
+    left: auto; /* Overrides default left alignment */
     z-index: 1000;
     display: none;
     min-width: 160px;
     padding: 8px 0;
-    margin: 2px 0 0;
-    margin-left: 85%;
-    font-size: 14px;
-    text-align: left;
-    list-style: none;
+    
+    /* Visual Style */
     background-color: #fff;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 6px 12px rgba (0, 0, 0, 0.175);
+    border-radius: 6px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    
+    /* Reset margins since we are using right: 0 */
+    margin: 0; 
+    list-style: none;
+    text-align: left;
 }
 
 .dropdown-menu a {
@@ -59,16 +80,4 @@
     padding: 8px 20px;
     font-weight: 400;
     line-height: 1.5;
-    color: #333;
-    text-decoration: none;
-}
-
-.dropdown-menu a:hover {
-    background-color: #f8f9fa;
-    color: #333;
-}
-
-.dropdown-menu.show {
-    display: block;
-    margin-left: 85%;
-}
+    color: #3
