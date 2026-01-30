@@ -4,7 +4,7 @@
     flex-direction: column;
     align-items: center; /* This centers the feed in the middle of the screen */
     padding: 20px;
-    background-color: #fafafa;
+    background-color: transparent; /* Changed to transparent so fancy background shows */
     min-height: 100vh;
 }
 
@@ -12,13 +12,14 @@
 .post-card {
     background-color: white;
     border: 1px solid #dbdbdb;
-    border-radius: 8px;
+    border-radius: 12px; /* Slightly rounder for modern look */
     margin-bottom: 30px;
     width: 100%;
     /* CRITICAL: This limits the width so images don't get huge */
-    max-width: 600px; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    max-width: 500px; 
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); /* Softer, deeper shadow */
     overflow: hidden;
+    transition: transform 0.2s;
 }
 
 /* --- 3. Header (Avatar + Username + Delete) --- */
@@ -67,9 +68,10 @@
 /* --- 4. The Image --- */
 .post-image-container {
     width: 100%;
-    background-color: #efefef;
+    background-color: #fafafa;
     display: flex;
     justify-content: center;
+    min-height: 300px; /* Prevents layout jump while loading */
 }
 
 .post-image {
@@ -90,19 +92,33 @@
 .action-icon {
     cursor: pointer;
     font-weight: 600;
-    color: #4b90ff; /* Gemini Blue */
+    color: #262626; /* Default dark grey (neutral) */
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     transition: transform 0.2s;
+    font-size: 15px;
 }
 
 .action-icon:hover {
     transform: scale(1.1);
 }
 
+/* --- RED HEART ANIMATION --- */
 .action-icon.liked {
-    color: #00d4ff; /* Brighter Blue */
+    color: #ed4956; /* Instagram Red */
+    animation: like-bounce 0.4s;
+}
+
+/* Adds a subtle glow to the heart when liked */
+.action-icon.liked svg {
+    filter: drop-shadow(0 0 5px rgba(237, 73, 86, 0.4));
+}
+
+@keyframes like-bounce {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.4); }
+    100% { transform: scale(1); }
 }
 
 /* --- 6. Content & Text --- */
@@ -118,18 +134,20 @@
 }
 
 .post-created {
-    font-size: 12px;
+    font-size: 11px;
     color: #8e8e8e;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
 }
 
 /* --- 7. Comments Section --- */
 .comments-section {
-    background: #f9f9f9;
+    background: #fcfcfc;
     padding: 10px;
     border-radius: 8px;
     margin-top: 10px;
+    border: 1px solid #f0f0f0;
 }
 
 .comment-row {
@@ -176,16 +194,29 @@
 
 .comment-input-area input {
     flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
+    padding: 10px 14px;
+    border: 1px solid #dbdbdb;
     border-radius: 20px;
     outline: none;
+    background: #fafafa;
+    font-size: 14px;
+}
+
+.comment-input-area input:focus {
+    border-color: #a5a5a5;
+    background: white;
 }
 
 .comment-input-area button {
     background: none;
     border: none;
-    color: #4b90ff;
+    color: #0095f6; /* Action Blue */
     cursor: pointer;
     font-size: 18px;
+    padding: 0 8px;
+    transition: transform 0.1s;
+}
+
+.comment-input-area button:hover {
+    transform: scale(1.1);
 }
