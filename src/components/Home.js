@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Posts from "./Posts";
-import'./Posts.css';
+import './Posts.css';
 import Navigation from "./Navigation";
-import'./Navigation.css';
+import './Navigation.css';
 import Users from './Users';
 
 const Home = () => {
     return(
         <div>
-        <Navigation/>
-        <Users/>
-        <Posts/>
-        <h1></h1>
+            <Navigation/>
+            <Users/>
+            <Posts/>
         </div>
     )
 }
