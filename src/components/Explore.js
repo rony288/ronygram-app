@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import './Explore.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserPlus, faHeart, faComment } from '@fortawesome/free-solid-svg-icons';
+// Removed faUserPlus from this line below
+import { faSearch, faHeart, faComment } from '@fortawesome/free-solid-svg-icons';
 
 const Explore = () => {
     const [activeTab, setActiveTab] = useState('For You');
 
-    // 1. Categories for the Filter Pills
     const categories = ['For You', 'Nature', 'Travel', 'Tech', 'Art', 'Food', 'Music', 'Style', 'Cars'];
 
-    // 2. "People You May Know" Data
     const suggestedUsers = [
         { id: 1, name: 'sarah_j', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' },
         { id: 2, name: 'mike_t', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
@@ -18,7 +17,6 @@ const Explore = () => {
         { id: 5, name: 'traveler', img: 'https://images.unsplash.com/photo-1521119989659-a83eee488058?w=150' },
     ];
 
-    // 3. The Grid Images (High quality Unsplash photos)
     const exploreImages = [
         { id: 1, src: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500', likes: 120, comments: 45 },
         { id: 2, src: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=500', likes: 89, comments: 12 },
@@ -36,7 +34,6 @@ const Explore = () => {
 
     return (
         <div className="explore-container">
-            {/* Search Bar Section */}
             <div className="search-section">
                 <div className="search-bar">
                     <FontAwesomeIcon icon={faSearch} className="search-icon" />
@@ -44,7 +41,6 @@ const Explore = () => {
                 </div>
             </div>
 
-            {/* Filter Pills (Scrollable) */}
             <div className="filter-tabs">
                 {categories.map((cat) => (
                     <button 
@@ -57,7 +53,6 @@ const Explore = () => {
                 ))}
             </div>
 
-            {/* Suggested Users Carousel */}
             <div className="suggested-section">
                 <h4>People You May Know</h4>
                 <div className="suggested-row">
@@ -71,13 +66,10 @@ const Explore = () => {
                 </div>
             </div>
 
-            {/* The Masonry Photo Grid */}
             <div className="explore-grid">
                 {exploreImages.map((post) => (
                     <div key={post.id} className="grid-item">
                         <img src={post.src} alt="Explore" />
-                        
-                        {/* Overlay appears on hover */}
                         <div className="grid-overlay">
                             <div className="overlay-stat">
                                 <FontAwesomeIcon icon={faHeart} /> {post.likes}
