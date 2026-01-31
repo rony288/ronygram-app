@@ -63,7 +63,6 @@
     object-fit: cover;
     padding: 4px;
     background: white;
-    /* Gradient Border */
     border: 3px solid transparent; 
     background: linear-gradient(white, white) padding-box,
                 linear-gradient(135deg, #4b90ff 0%, #00d4ff 100%) border-box;
@@ -172,7 +171,7 @@
 .gallery-item {
     position: relative;
     width: 100%;
-    padding-bottom: 100%; /* Makes it a square */
+    padding-bottom: 100%; 
     overflow: hidden;
     background-color: #f0f0f0;
     border-radius: 4px;
@@ -188,13 +187,9 @@
     transition: transform 0.3s;
 }
 
-.gallery-item:hover .gallery-image {
-    transform: scale(1.05);
-}
-
-/* --- 6. Upload Box Styles (NEW) --- */
+/* --- 6. Upload Box --- */
 .upload-box {
-    border: 2px dashed #dbdbdb; /* Dashed border for "upload" look */
+    border: 2px dashed #dbdbdb; 
     background-color: #fafafa;
     display: flex;
     justify-content: center;
@@ -204,8 +199,8 @@
 }
 
 .upload-box:hover {
-    border-color: #0095f6; /* Blue border on hover */
-    background-color: #f0f9ff; /* Light blue background */
+    border-color: #0095f6;
+    background-color: #f0f9ff;
 }
 
 .upload-label {
@@ -219,6 +214,7 @@
     color: #8e8e8e;
     font-size: 14px;
     font-weight: 600;
+    z-index: 5; /* Ensures label is clickable */
 }
 
 .icon-circle {
@@ -238,7 +234,50 @@
 .upload-box:hover .icon-circle {
     border-color: #0095f6;
     color: #0095f6;
-    transform: scale(1.1); /* Slight pop effect */
+    transform: scale(1.1);
+}
+
+/* --- 7. HOVER OVERLAY (Displays Caption) --- */
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Darkens image */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1; /* Shows on hover */
+}
+
+.overlay-text {
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    text-align: center;
+    padding: 10px;
+}
+
+.caption-text {
+    margin: 0;
+    /* Limit caption length visually */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.stats {
+    display: flex;
+    gap: 15px;
+    font-size: 18px;
 }
 
 /* --- Mobile Responsiveness --- */
@@ -248,14 +287,8 @@
         align-items: flex-start;
         padding: 20px;
     }
-    
-    .profile-image-section {
-        margin-right: 0;
-        margin-bottom: 20px;
-    }
-
+    .profile-image-section { margin-right: 0; margin-bottom: 20px; }
     .avatar-wrapper { width: 77px; height: 77px; }
-
     .profile-row-2 {
         justify-content: space-between;
         width: 100%;
@@ -264,21 +297,10 @@
         padding: 10px 0;
         margin: 15px 0;
     }
-
-    .profile-tabs {
-        gap: 0;
-        justify-content: space-around;
-    }
-    
+    .profile-tabs { gap: 0; justify-content: space-around; }
     .tab-item span { display: none; }
-    
-    .tab-item {
-        font-size: 20px;
-        border: none !important;
-    }
-    
+    .tab-item { font-size: 20px; border: none !important; }
     .tab-item.active { color: #0095f6; }
-    
     .profile-gallery { gap: 3px; }
     .gallery-item { border-radius: 0; }
 }
