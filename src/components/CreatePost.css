@@ -1,17 +1,14 @@
-/* --- 1. The Card Container --- */
+/* Container for the "Create Post" box */
 .create-post-card {
     background: white;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 30px;
-    /* Soft shadow to make it float over the pattern */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); 
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    max-width: 500px; /* Matches feed width */
-    width: 100%;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 25px; /* Spacing between this and the first post */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 }
 
-/* --- 2. Input Area (Avatar + Text) --- */
+/* Row for Avatar + Text Input */
 .input-group {
     display: flex;
     gap: 15px;
@@ -23,96 +20,89 @@
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #e0f2fe; /* Light blue border */
+    border: 1px solid #dbdbdb;
 }
 
-/* Targeting the textarea inside the card */
-.create-post-card textarea {
+textarea {
     width: 100%;
     border: none;
-    resize: none;
-    font-family: inherit;
-    font-size: 15px;
     outline: none;
-    background: #fafafa;
-    padding: 12px;
-    border-radius: 12px;
+    resize: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    padding-top: 10px;
+    min-height: 40px;
     color: #262626;
-    min-height: 60px;
-    transition: all 0.2s;
 }
 
-.create-post-card textarea:focus {
-    background: white;
-    box-shadow: 0 0 0 2px #e0f2fe; /* Blue glow on focus */
+textarea::placeholder {
+    color: #8e8e8e;
 }
 
-/* --- 3. Image Preview --- */
+/* Image Preview Area */
 .image-preview {
     margin-bottom: 15px;
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid #efefef;
+    background: #f0f0f0;
+    position: relative;
 }
 
 .image-preview img {
     width: 100%;
-    height: auto;
-    display: block;
-    max-height: 300px;
+    max-height: 400px;
     object-fit: cover;
+    display: block;
 }
 
-/* --- 4. Action Bar (Bottom Buttons) --- */
+/* Bottom Actions Bar */
 .action-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 15px;
     border-top: 1px solid #efefef;
+    padding-top: 12px;
 }
 
-/* Photo Upload Button */
+/* Custom "Photo" Button */
 .custom-file-upload {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 8px;
-    cursor: pointer;
-    font-size: 14px;
+    color: #0095f6; /* Gemini Blue */
     font-weight: 600;
-    color: #0095f6; /* Blue text */
+    font-size: 14px;
+    cursor: pointer;
     padding: 8px 12px;
-    border-radius: 8px;
+    border-radius: 4px;
     transition: background 0.2s;
 }
 
 .custom-file-upload:hover {
-    background-color: #e0f2fe; /* Light blue hover background */
+    background-color: #f0f9ff;
 }
 
 /* Post Button */
 .post-btn {
-    background: linear-gradient(135deg, #4b90ff 0%, #00d4ff 100%); /* Gemini Blue Gradient */
+    background-color: #0095f6;
     color: white;
     border: none;
-    padding: 8px 24px;
-    border-radius: 20px;
+    padding: 6px 16px;
+    border-radius: 4px;
     font-weight: 600;
     cursor: pointer;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 8px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 10px rgba(0, 212, 255, 0.3);
-}
-
-.post-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 212, 255, 0.5);
+    font-size: 14px;
+    transition: opacity 0.2s;
 }
 
 .post-btn:disabled {
-    background: #b2dffc;
-    cursor: not-allowed;
-    box-shadow: none;
+    background-color: #b2dffc; /* Faded blue */
+    cursor: default;
+}
+
+.post-btn:not(:disabled):hover {
+    background-color: #0085e0;
 }
