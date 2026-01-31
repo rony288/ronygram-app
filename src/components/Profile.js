@@ -1,37 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Profile.css'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTh, faBookmark, faUserTag, faCog, faArrowLeft, faPlus, faComment } from '@fortawesome/free-solid-svg-icons';
+import { faTh, faBookmark, faUserTag, faCog, faArrowLeft, faPlus, faComment, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
     const navigate = useNavigate();
 
-    // 1. STATE: Start with an EMPTY list (no white cards)
-    const [posts, setPosts] = useState([]);
+    // 1. INITIALIZE STATE FROM LOCAL STORAGE
+    // Check if we have saved profile posts. If not, start empty.
+    const [posts, setPosts] = useState(() => {
+        const savedProfilePosts = localStorage.getItem('ronygram_profile_posts');
+        return savedProfilePosts ? JSON.parse(savedProfilePosts) : [];
+    });
 
-    // 2. FUNCTION: Upload + Caption Prompt
+    // 2. SAVE TO LOCAL STORAGE
+    // Whenever 'posts' changes (you upload a new one), save it.
+    useEffect(() => {
+        localStorage.setItem('ronygram_profile_posts', JSON.stringify(posts));
+    }, [posts]);
+
+    // 3. UPLOAD FUNCTION
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
-            // Ask for a caption immediately
+            // Ask for a caption
             const caption = window.prompt("Write a caption for your post:");
             
-            // If user clicks "Cancel", stop the upload
-            if (caption === null) return;
+            // If user clicked cancel, don't upload
+            if (caption === null) return; 
 
-            const newImageUrl = URL.createObjectURL(file);
-            
-            const newPost = { 
-                id: Date.now(), 
-                image: newImageUrl,
-                caption: caption, // Store the caption
-                likes: 0,
-                comments: 0
+            // Create a URL for the image
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const newPost = { 
+                    id: Date.now(), 
+                    image: reader.result, // We use FileReader to save the string locally
+                    caption: caption || "", // Save the caption!
+                    likes: 0,
+                    comments: 0
+                };
+                // Add to the list
+                setPosts([newPost, ...posts]); 
             };
-
-            // Add to the list
-            setPosts([newPost, ...posts]); 
+            reader.readAsDataURL(file);
         }
     };
 
@@ -118,19 +130,19 @@ const Profile = () => {
                     />
                 </div>
 
-                {/* POSTS with Hover Caption */}
+                {/* POSTS */}
                 {posts.map((post) => (
                     <div key={post.id} className="gallery-item">
                         <img src={post.image} alt="Post" className="gallery-image" />
                         
-                        {/* Overlay that appears on hover */}
+                        {/* THIS OVERLAY SHOWS THE CAPTION ON HOVER */}
                         <div className="gallery-overlay">
                             <div className="overlay-text">
                                 {post.caption ? (
                                     <p className="caption-text">{post.caption}</p>
                                 ) : (
                                     <div className="stats">
-                                        <span>❤️ {post.likes}</span>
+                                        <span><FontAwesomeIcon icon={faHeart} /> {post.likes}</span>
                                         <span><FontAwesomeIcon icon={faComment} /> {post.comments}</span>
                                     </div>
                                 )}
