@@ -1,0 +1,190 @@
+/* --- 1. Container --- */
+.explore-container {
+    max-width: 935px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 80px; /* Space for footer/nav */
+}
+
+/* --- 2. Search Bar --- */
+.search-section {
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    background: white;
+    padding: 12px 20px;
+    border-radius: 25px; /* Fully rounded pill shape */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border: 1px solid #efefef;
+}
+
+.search-icon {
+    color: #8e8e8e;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    color: #262626;
+}
+
+/* --- 3. Filter Pills --- */
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto; /* Scroll sideways on mobile */
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    /* Hide scrollbar for cleaner look */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.filter-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-pill {
+    background: white;
+    border: 1px solid #dbdbdb;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #262626;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.filter-pill.active {
+    background: #262626;
+    color: white;
+    border-color: #262626;
+}
+
+.filter-pill:hover:not(.active) {
+    background: #fafafa;
+}
+
+/* --- 4. Suggested Users (Horizontal Scroll) --- */
+.suggested-section {
+    margin-bottom: 30px;
+}
+
+.suggested-section h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #8e8e8e;
+}
+
+.suggested-row {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 10px 5px;
+}
+
+.suggested-card {
+    background: white;
+    min-width: 120px;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border: 1px solid #efefef;
+}
+
+.suggested-card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 2px solid #e1e1e1;
+}
+
+.suggested-card p {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.follow-btn {
+    background: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 15px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+}
+
+.follow-btn:hover {
+    background: #0085e0;
+}
+
+/* --- 5. Masonry Grid --- */
+.explore-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.grid-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 1 / 1; /* Force squares */
+}
+
+.grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.grid-item:hover img {
+    transform: scale(1.1);
+}
+
+/* Hover Overlay */
+.grid-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    color: white;
+    font-size: 24px;
+}
+
+.grid-item:hover .grid-overlay {
+    opacity: 1;
+}
+
+/* Mobile Tweaks */
+@media (max-width: 600px) {
+    .explore-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+        gap: 5px;
+    }
+}
