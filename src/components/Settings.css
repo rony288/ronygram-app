@@ -1,0 +1,68 @@
+.settings-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.settings-section {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #efefef;
+    padding-bottom: 20px;
+}
+
+.settings-section:last-child {
+    border-bottom: none;
+}
+
+h2 {
+    margin-bottom: 30px;
+    color: #262626;
+}
+
+h3 {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #8e8e8e;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.danger-btn {
+    background-color: #fff;
+    border: 1px solid #ed4956;
+    color: #ed4956;
+}
+
+.danger-btn:hover {
+    background-color: #ed4956;
+    color: white;
+}
+
+.logout-btn {
+    background-color: #efefef;
+    color: #262626;
+}
+
+.logout-btn:hover {
+    background-color: #dbdbdb;
+}
