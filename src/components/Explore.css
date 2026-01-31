@@ -4,26 +4,38 @@
     margin: 0 auto;
     padding: 20px;
     padding-bottom: 80px; /* Space for footer/nav on mobile */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* --- 2. Search Bar --- */
 .search-section {
     margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
 }
 
 .search-bar {
     background: white;
+    width: 100%;
+    max-width: 600px;
     padding: 12px 20px;
-    border-radius: 25px; /* Fully rounded pill shape */
+    border-radius: 25px; /* Pill shape */
     display: flex;
     align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    gap: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     border: 1px solid #efefef;
+    transition: box-shadow 0.2s;
+}
+
+.search-bar:focus-within {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    border-color: #dbdbdb;
 }
 
 .search-icon {
     color: #8e8e8e;
+    font-size: 18px;
 }
 
 .search-bar input {
@@ -38,11 +50,12 @@
 /* --- 3. Filter Pills (Horizontal Scroll) --- */
 .filter-tabs {
     display: flex;
-    gap: 10px;
-    overflow-x: auto; /* Scroll sideways */
+    gap: 12px;
+    overflow-x: auto; /* Enables sideways scrolling */
     padding-bottom: 10px;
-    margin-bottom: 20px;
-    /* Hide scrollbar for cleaner look */
+    margin-bottom: 25px;
+    
+    /* Hides scrollbar for a cleaner look */
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
@@ -53,35 +66,38 @@
 .filter-pill {
     background: white;
     border: 1px solid #dbdbdb;
-    padding: 8px 20px;
+    padding: 8px 24px;
     border-radius: 20px;
     font-weight: 600;
     font-size: 14px;
     color: #262626;
     cursor: pointer;
     white-space: nowrap;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
 }
 
 .filter-pill.active {
     background: #262626;
     color: white;
     border-color: #262626;
+    transform: scale(1.05);
 }
 
 .filter-pill:hover:not(.active) {
     background: #fafafa;
+    transform: translateY(-2px);
 }
 
-/* --- 4. People You May Know (Horizontal Scroll) --- */
+/* --- 4. Suggested Users (Carousel) --- */
 .suggested-section {
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
 .suggested-section h4 {
     font-size: 16px;
     font-weight: 700;
-    margin-bottom: 15px;
+    margin: 0 0 15px 0;
     color: #8e8e8e;
 }
 
@@ -90,53 +106,52 @@
     gap: 15px;
     overflow-x: auto;
     padding: 10px 5px;
-    /* Hide scrollbar */
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
-.suggested-row::-webkit-scrollbar {
-    display: none;
-}
+.suggested-row::-webkit-scrollbar { display: none; }
 
 .suggested-card {
     background: white;
-    min-width: 130px; /* Width of each card */
+    min-width: 140px;
     padding: 15px;
     border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    border: 1px solid #efefef;
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border: 1px solid #f0f0f0;
+    transition: transform 0.2s;
+}
+
+.suggested-card:hover {
+    transform: translateY(-3px);
 }
 
 .suggested-card img {
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 10px;
-    border: 2px solid #e1e1e1;
+    border: 2px solid #fafafa;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.suggested-card p {
+.suggested-name {
     font-size: 14px;
     font-weight: 600;
-    margin: 0 0 10px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+    margin: 0 0 12px 0;
+    color: #262626;
 }
 
 .follow-btn {
-    background: #0095f6; /* Gemini Blue */
+    background: #0095f6;
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 6px 15px;
-    font-size: 12px;
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     width: 100%;
@@ -147,12 +162,12 @@
     background: #0085e0;
 }
 
-/* --- 5. Masonry Grid (The Images) --- */
+/* --- 5. The Masonry Grid --- */
 .explore-grid {
     display: grid;
-    /* This creates a responsive grid that autofills columns */
+    /* Responsive columns: at least 250px wide, fits as many as possible */
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
+    gap: 20px;
 }
 
 .grid-item {
@@ -160,51 +175,65 @@
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
-    aspect-ratio: 1 / 1; /* Forces perfectly square images */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    aspect-ratio: 1 / 1; /* Forces perfect squares */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    background: #efefef; /* Placeholder color while loading */
 }
 
 .grid-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
     display: block;
 }
 
+/* Zoom Effect on Hover */
 .grid-item:hover img {
-    transform: scale(1.1); /* Zoom effect on hover */
+    transform: scale(1.1);
 }
 
-/* Overlay with Icon on Hover */
+/* Dark Overlay with Stats */
 .grid-overlay {
     position: absolute;
     top: 0; 
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.3); /* Darkens image */
+    background: rgba(0,0,0,0.4);
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0; /* Hidden by default */
-    transition: opacity 0.2s;
-    color: white;
-    font-size: 24px;
+    gap: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
 .grid-item:hover .grid-overlay {
-    opacity: 1; /* Shows on hover */
+    opacity: 1;
 }
 
-/* --- Mobile Responsiveness --- */
+.overlay-stat {
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* --- Mobile Tweaks --- */
 @media (max-width: 600px) {
     .explore-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on small screens */
         gap: 5px;
     }
     
     .explore-container {
         padding: 10px;
+    }
+    
+    .search-bar {
+        padding: 10px 15px;
     }
 }
