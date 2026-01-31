@@ -33,7 +33,7 @@ const Explore = () => {
 
     return (
         <div className="explore-container">
-            {/* 1. Search Bar */}
+            {/* Search Bar */}
             <div className="search-section">
                 <div className="search-bar">
                     <FontAwesomeIcon icon={faSearch} className="search-icon" />
@@ -41,7 +41,7 @@ const Explore = () => {
                 </div>
             </div>
 
-            {/* 2. Filter Tabs (Pills) */}
+            {/* Filter Tabs */}
             <div className="filter-tabs">
                 {categories.map((cat) => (
                     <button 
@@ -54,7 +54,7 @@ const Explore = () => {
                 ))}
             </div>
 
-            {/* 3. People You May Know */}
+            {/* Suggested Users */}
             <div className="suggested-section">
                 <h4>People You May Know</h4>
                 <div className="suggested-row">
@@ -68,7 +68,7 @@ const Explore = () => {
                 </div>
             </div>
 
-            {/* 4. Masonry Image Grid */}
+            {/* Masonry Grid */}
             <div className="explore-grid">
                 {exploreImages.map((img, index) => (
                     <div key={index} className="grid-item">
