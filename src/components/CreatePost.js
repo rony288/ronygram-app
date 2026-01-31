@@ -6,12 +6,12 @@ import { faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 const CreatePost = ({ onPostCreate }) => {
     const [caption, setCaption] = useState('');
     const [preview, setPreview] = useState(null); 
-    // Removed "imageFile" state here because it was unused
+    // REMOVED: const [imageFile, setImageFile] = useState(null); 
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            // We don't need to save the raw file anymore, just the preview
+            // REMOVED: setImageFile(file);
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreview(reader.result);
