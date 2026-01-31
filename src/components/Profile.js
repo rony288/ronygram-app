@@ -1,36 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Profile.css'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTh, faBookmark, faUserTag, faCog, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faTh, faBookmark, faUserTag, faCog, faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
     const navigate = useNavigate();
 
-    // Placeholder data for the gallery images
-    // In a real app, these would come from your database or an API
-    const posts = [
+    // 1. STATE: Keeps track of your photos so we can add new ones
+    const [posts, setPosts] = useState([
         { id: 1, image: 'https://via.placeholder.com/300' },
         { id: 2, image: 'https://via.placeholder.com/300' },
         { id: 3, image: 'https://via.placeholder.com/300' },
         { id: 4, image: 'https://via.placeholder.com/300' },
         { id: 5, image: 'https://via.placeholder.com/300' },
         { id: 6, image: 'https://via.placeholder.com/300' },
-    ];
+    ]);
+
+    // 2. FUNCTION: Handles the file upload
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Creates a temporary URL for the uploaded image
+            const newImageUrl = URL.createObjectURL(file);
+            
+            const newPost = { 
+                id: Date.now(), // Unique ID based on current time
+                image: newImageUrl 
+            };
+
+            // Adds the new photo to the beginning of the list
+            setPosts([newPost, ...posts]); 
+        }
+    };
 
     return (
         <div className="profile-container">
-            {/* 1. Back Button */}
+            {/* Back Button */}
             <button className="back-home-btn" onClick={() => navigate('/home')}>
                 <FontAwesomeIcon icon={faArrowLeft} /> Back to Feed
             </button>
 
-            {/* 2. Profile Header (White Card) */}
+            {/* Profile Header Card */}
             <div className="profile-header">
-                {/* Avatar Section */}
                 <div className="profile-image-section">
                     <div className="avatar-wrapper">
-                        {/* Make sure this image path matches your project structure */}
                         <img 
                             src={require('../images/MyLove.jpeg')} 
                             alt="Profile" 
@@ -40,7 +54,6 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* Info Section */}
                 <div className="profile-info-section">
                     <div className="profile-row-1">
                         <h2 className="profile-username">ronaldkipkemboi</h2>
@@ -49,7 +62,7 @@ const Profile = () => {
                     </div>
 
                     <div className="profile-row-2">
-                        <span><strong>6</strong> posts</span>
+                        <span><strong>{posts.length}</strong> posts</span>
                         <span><strong>1.5k</strong> followers</span>
                         <span><strong>342</strong> following</span>
                     </div>
@@ -68,7 +81,7 @@ const Profile = () => {
                 </div>
             </div>
 
-            {/* 3. The New Tab Navigation Bar */}
+            {/* Navigation Tabs */}
             <div className="profile-tabs">
                 <div className="tab-item active">
                     <FontAwesomeIcon icon={faTh} />
@@ -84,8 +97,27 @@ const Profile = () => {
                 </div>
             </div>
 
-            {/* 4. Photo Gallery Grid */}
+            {/* Photo Gallery Grid */}
             <div className="profile-gallery">
+                
+                {/* --- UPLOAD BUTTON (Always the first square) --- */}
+                <div className="gallery-item upload-box">
+                    <label htmlFor="file-upload" className="upload-label">
+                        <div className="icon-circle">
+                            <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                        <span>Add Photo</span>
+                    </label>
+                    <input 
+                        id="file-upload" 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleFileUpload}
+                        style={{ display: 'none' }} // Hides the default ugly file input
+                    />
+                </div>
+
+                {/* Render All Photos */}
                 {posts.map((post) => (
                     <div key={post.id} className="gallery-item">
                         <img src={post.image} alt="Post" className="gallery-image" />
