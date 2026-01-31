@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Explore.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// Removed faUserPlus from this line below
+// REMOVED faUserPlus from the line below
 import { faSearch, faHeart, faComment } from '@fortawesome/free-solid-svg-icons';
 
 const Explore = () => {
