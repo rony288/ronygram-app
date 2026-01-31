@@ -1,9 +1,9 @@
-/* --- 1. Container --- */
+/* --- 1. Main Container --- */
 .explore-container {
     max-width: 935px;
     margin: 0 auto;
     padding: 20px;
-    padding-bottom: 80px; /* Space for footer/nav */
+    padding-bottom: 80px; /* Space for footer/nav on mobile */
 }
 
 /* --- 2. Search Bar --- */
@@ -32,13 +32,14 @@
     width: 100%;
     font-size: 16px;
     color: #262626;
+    background: transparent;
 }
 
-/* --- 3. Filter Pills --- */
+/* --- 3. Filter Pills (Horizontal Scroll) --- */
 .filter-tabs {
     display: flex;
     gap: 10px;
-    overflow-x: auto; /* Scroll sideways on mobile */
+    overflow-x: auto; /* Scroll sideways */
     padding-bottom: 10px;
     margin-bottom: 20px;
     /* Hide scrollbar for cleaner look */
@@ -72,7 +73,7 @@
     background: #fafafa;
 }
 
-/* --- 4. Suggested Users (Horizontal Scroll) --- */
+/* --- 4. People You May Know (Horizontal Scroll) --- */
 .suggested-section {
     margin-bottom: 30px;
 }
@@ -89,16 +90,25 @@
     gap: 15px;
     overflow-x: auto;
     padding: 10px 5px;
+    /* Hide scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.suggested-row::-webkit-scrollbar {
+    display: none;
 }
 
 .suggested-card {
     background: white;
-    min-width: 120px;
+    min-width: 130px; /* Width of each card */
     padding: 15px;
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     border: 1px solid #efefef;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .suggested-card img {
@@ -117,10 +127,11 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .follow-btn {
-    background: #0095f6;
+    background: #0095f6; /* Gemini Blue */
     color: white;
     border: none;
     border-radius: 4px;
@@ -129,15 +140,17 @@
     font-weight: 600;
     cursor: pointer;
     width: 100%;
+    transition: background 0.2s;
 }
 
 .follow-btn:hover {
     background: #0085e0;
 }
 
-/* --- 5. Masonry Grid --- */
+/* --- 5. Masonry Grid (The Images) --- */
 .explore-grid {
     display: grid;
+    /* This creates a responsive grid that autofills columns */
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 15px;
 }
@@ -147,44 +160,51 @@
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
-    aspect-ratio: 1 / 1; /* Force squares */
+    aspect-ratio: 1 / 1; /* Forces perfectly square images */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .grid-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s;
+    transition: transform 0.3s ease;
+    display: block;
 }
 
 .grid-item:hover img {
-    transform: scale(1.1);
+    transform: scale(1.1); /* Zoom effect on hover */
 }
 
-/* Hover Overlay */
+/* Overlay with Icon on Hover */
 .grid-overlay {
     position: absolute;
-    top: 0; left: 0;
+    top: 0; 
+    left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0,0,0,0.3); /* Darkens image */
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0;
+    opacity: 0; /* Hidden by default */
     transition: opacity 0.2s;
     color: white;
     font-size: 24px;
 }
 
 .grid-item:hover .grid-overlay {
-    opacity: 1;
+    opacity: 1; /* Shows on hover */
 }
 
-/* Mobile Tweaks */
+/* --- Mobile Responsiveness --- */
 @media (max-width: 600px) {
     .explore-grid {
         grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
         gap: 5px;
+    }
+    
+    .explore-container {
+        padding: 10px;
     }
 }
