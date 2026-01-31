@@ -1,5 +1,5 @@
 import React from 'react';
-import './Profile.css'; // Ensure this matches your CSS file name
+import './Profile.css'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTh, faBookmark, faUserTag, faCog, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,8 @@ import { useNavigate } from 'react-router-dom';
 const Profile = () => {
     const navigate = useNavigate();
 
-    // Placeholder data for the gallery
+    // Placeholder data for the gallery images
+    // In a real app, these would come from your database or an API
     const posts = [
         { id: 1, image: 'https://via.placeholder.com/300' },
         { id: 2, image: 'https://via.placeholder.com/300' },
@@ -19,20 +20,22 @@ const Profile = () => {
 
     return (
         <div className="profile-container">
-            {/* Back Button */}
+            {/* 1. Back Button */}
             <button className="back-home-btn" onClick={() => navigate('/home')}>
                 <FontAwesomeIcon icon={faArrowLeft} /> Back to Feed
             </button>
 
-            {/* Profile Header Card */}
+            {/* 2. Profile Header (White Card) */}
             <div className="profile-header">
-                {/* Image Section */}
+                {/* Avatar Section */}
                 <div className="profile-image-section">
                     <div className="avatar-wrapper">
+                        {/* Make sure this image path matches your project structure */}
                         <img 
                             src={require('../images/MyLove.jpeg')} 
                             alt="Profile" 
                             className="profile-main-img"
+                            onError={(e) => {e.target.src = 'https://via.placeholder.com/150'}}
                         />
                     </div>
                 </div>
@@ -58,12 +61,14 @@ const Profile = () => {
                             Building RonyGram with React & ❤️<br />
                             Capturing memories in code.
                         </p>
-                        <a href="https://github.com/rony288" className="profile-link">github.com/rony288</a>
+                        <a href="https://github.com/rony288" className="profile-link" target="_blank" rel="noreferrer">
+                            github.com/rony288
+                        </a>
                     </div>
                 </div>
             </div>
 
-            {/* --- NEW: INSTAGRAM TABS --- */}
+            {/* 3. The New Tab Navigation Bar */}
             <div className="profile-tabs">
                 <div className="tab-item active">
                     <FontAwesomeIcon icon={faTh} />
@@ -79,7 +84,7 @@ const Profile = () => {
                 </div>
             </div>
 
-            {/* Photo Gallery */}
+            {/* 4. Photo Gallery Grid */}
             <div className="profile-gallery">
                 {posts.map((post) => (
                     <div key={post.id} className="gallery-item">
