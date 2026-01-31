@@ -5,45 +5,27 @@ import './Posts.css';
 import CreatePost from './CreatePost'; 
 
 const Posts = () => {
-    const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // 1. INITIALIZE STATE FROM LOCAL STORAGE
+    // We check if 'ronygram_posts' exists in the browser. 
+    // If yes, we load it. If no, we start with an empty list [].
+    const [posts, setPosts] = useState(() => {
+        const savedPosts = localStorage.getItem('ronygram_posts');
+        return savedPosts ? JSON.parse(savedPosts) : [];
+    });
 
     const [activeCommentBox, setActiveCommentBox] = useState(null);
     const [commentInput, setCommentInput] = useState("");
 
+    // 2. SAVE TO LOCAL STORAGE
+    // Every time 'posts' changes (new post, like, or comment), we save it.
     useEffect(() => {
-        const controller = new AbortController();
-        const fetchPosts = async () => {
-            try {
-                const response = await fetch('/posts.json', { signal: controller.signal });
-                if (!response.ok) throw new Error('Failed to fetch');
-                const data = await response.json();
-                
-                const preparedData = data.map((post, postIndex) => {
-                    const rawComments = Array.isArray(post.comments) ? post.comments : [];
-                    return {
-                        ...post,
-                        comments: rawComments.map((c, i) => ({
-                            ...c,
-                            id: c.id || `init-${postIndex}-${i}` 
-                        })), 
-                        isLiked: false 
-                    };
-                });
-                
-                setPosts([...preparedData].reverse());
-            } catch (err) {
-                if (err.name !== 'AbortError') setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchPosts();
-        return () => controller.abort();
-    }, []);
+        localStorage.setItem('ronygram_posts', JSON.stringify(posts));
+    }, [posts]);
+
+    // --- Post Handlers ---
 
     const handleNewPost = (newPost) => {
+        // Add new post to the top of the list
         setPosts([newPost, ...posts]);
     };
 
@@ -56,6 +38,7 @@ const Posts = () => {
     const handleLike = (id) => {
         setPosts(posts.map(post => {
             if (post.id === id) {
+                // Toggle like logic
                 const newLikes = post.isLiked ? post.likes - 1 : post.likes + 1;
                 return { ...post, likes: newLikes, isLiked: !post.isLiked };
             }
@@ -63,17 +46,7 @@ const Posts = () => {
         }));
     };
 
-    const handleDeleteComment = (postId, commentId) => {
-        setPosts(posts.map(post => {
-            if (post.id === postId) {
-                return {
-                    ...post,
-                    comments: post.comments.filter(c => c.id !== commentId)
-                };
-            }
-            return post;
-        }));
-    };
+    // --- Comment Handlers ---
 
     const toggleCommentBox = (id) => {
         if (activeCommentBox === id) {
@@ -94,24 +67,40 @@ const Posts = () => {
                     user: "Me", 
                     text: commentInput 
                 };
-                return { ...post, comments: [...post.comments, newComment] };
+                // Ensure comments array exists before adding
+                const currentComments = post.comments || [];
+                return { ...post, comments: [...currentComments, newComment] };
             }
             return post;
         }));
-        setCommentInput("");
+        
+        setCommentInput(""); // Clear input after submit
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return (
-        <div style={{ color: 'red', textAlign: 'center', marginTop: '20px' }}>
-            <h3>⚠️ Error Loading Feed</h3>
-            <p>{error}</p>
-        </div>
-    );
+    const handleDeleteComment = (postId, commentId) => {
+        setPosts(posts.map(post => {
+            if (post.id === postId) {
+                return {
+                    ...post,
+                    comments: post.comments.filter(c => c.id !== commentId)
+                };
+            }
+            return post;
+        }));
+    };
 
     return (
         <div className="posts-container">
+            {/* Pass the handler to CreatePost so it can send data back here */}
             <CreatePost onPostCreate={handleNewPost} />
+
+            {/* If no posts exist, show a friendly message */}
+            {posts.length === 0 && (
+                <div style={{ textAlign: 'center', color: '#8e8e8e', marginTop: '50px' }}>
+                    <h3>No posts yet</h3>
+                    <p>Be the first to share a photo!</p>
+                </div>
+            )}
 
             {posts.map((post) => (
                 <div className="post-card" key={post.id}>
@@ -121,7 +110,7 @@ const Posts = () => {
                                 className="user-avatar" 
                                 src={post.user.avatar || require('../images/MyLove.jpeg')}
                                 alt="Avatar"
-                                onError={(e) => {e.target.src = require('../images/MyLove.jpeg')}}
+                                onError={(e) => {e.target.src = 'https://via.placeholder.com/40'}}
                             />
                             <p className="username">{post.user.username}</p>
                         </div>
@@ -135,26 +124,28 @@ const Posts = () => {
                     </div>
                     
                     <div className="post-actions">
-                        {/* Like Button */}
                         <span 
                             onClick={() => handleLike(post.id)} 
                             className={`action-icon ${post.isLiked ? 'liked' : ''}`}
                         >
                             <FontAwesomeIcon icon={faHeart}/> {post.likes} Likes
                         </span>
-
-                        {/* Comment Button */}
                         <span onClick={() => toggleCommentBox(post.id)} className="action-icon">
-                            <FontAwesomeIcon icon={faComment}/> {post.comments.length} Comments
+                            <FontAwesomeIcon icon={faComment}/> {post.comments ? post.comments.length : 0} Comments
                         </span>
                     </div>
 
                     <div className="post-content">
-                        <h5 className="post-description">{post.description}</h5>
+                        {post.description && (
+                            <h5 className="post-description">
+                                <span style={{fontWeight: 'bold', marginRight: '8px'}}>{post.user.username}</span>
+                                {post.description}
+                            </h5>
+                        )}
                         <p className="post-created">{post.created}</p>
 
-                        {/* Comments List */}
-                        {post.comments.length > 0 && (
+                        {/* Comments Section */}
+                        {post.comments && post.comments.length > 0 && (
                             <div className="comments-section">
                                 {post.comments.map((c) => (
                                     <div key={c.id} className="comment-row">
@@ -172,7 +163,6 @@ const Posts = () => {
                             </div>
                         )}
 
-                        {/* Comment Input */}
                         {activeCommentBox === post.id && (
                             <div className="comment-input-area">
                                 <input 
@@ -181,6 +171,7 @@ const Posts = () => {
                                     value={commentInput}
                                     onChange={(e) => setCommentInput(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && submitComment(post.id)}
+                                    autoFocus
                                 />
                                 <button onClick={() => submitComment(post.id)}>
                                     <FontAwesomeIcon icon={faPaperPlane} />
