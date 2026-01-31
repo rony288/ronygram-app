@@ -1,35 +1,36 @@
 import React, { useState } from 'react';
 import './Profile.css'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTh, faBookmark, faUserTag, faCog, faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTh, faBookmark, faUserTag, faCog, faArrowLeft, faPlus, faComment } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
     const navigate = useNavigate();
 
-    // 1. STATE: Keeps track of your photos so we can add new ones
-    const [posts, setPosts] = useState([
-        { id: 1, image: 'https://via.placeholder.com/300' },
-        { id: 2, image: 'https://via.placeholder.com/300' },
-        { id: 3, image: 'https://via.placeholder.com/300' },
-        { id: 4, image: 'https://via.placeholder.com/300' },
-        { id: 5, image: 'https://via.placeholder.com/300' },
-        { id: 6, image: 'https://via.placeholder.com/300' },
-    ]);
+    // 1. STATE: Start with an EMPTY list (no white cards)
+    const [posts, setPosts] = useState([]);
 
-    // 2. FUNCTION: Handles the file upload
+    // 2. FUNCTION: Upload + Caption Prompt
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
-            // Creates a temporary URL for the uploaded image
+            // Ask for a caption immediately
+            const caption = window.prompt("Write a caption for your post:");
+            
+            // If user clicks "Cancel", stop the upload
+            if (caption === null) return;
+
             const newImageUrl = URL.createObjectURL(file);
             
             const newPost = { 
-                id: Date.now(), // Unique ID based on current time
-                image: newImageUrl 
+                id: Date.now(), 
+                image: newImageUrl,
+                caption: caption, // Store the caption
+                likes: 0,
+                comments: 0
             };
 
-            // Adds the new photo to the beginning of the list
+            // Add to the list
             setPosts([newPost, ...posts]); 
         }
     };
@@ -41,7 +42,7 @@ const Profile = () => {
                 <FontAwesomeIcon icon={faArrowLeft} /> Back to Feed
             </button>
 
-            {/* Profile Header Card */}
+            {/* Header */}
             <div className="profile-header">
                 <div className="profile-image-section">
                     <div className="avatar-wrapper">
@@ -81,7 +82,7 @@ const Profile = () => {
                 </div>
             </div>
 
-            {/* Navigation Tabs */}
+            {/* Tabs */}
             <div className="profile-tabs">
                 <div className="tab-item active">
                     <FontAwesomeIcon icon={faTh} />
@@ -97,10 +98,10 @@ const Profile = () => {
                 </div>
             </div>
 
-            {/* Photo Gallery Grid */}
+            {/* Grid */}
             <div className="profile-gallery">
                 
-                {/* --- UPLOAD BUTTON (Always the first square) --- */}
+                {/* UPLOAD BOX */}
                 <div className="gallery-item upload-box">
                     <label htmlFor="file-upload" className="upload-label">
                         <div className="icon-circle">
@@ -113,14 +114,28 @@ const Profile = () => {
                         type="file" 
                         accept="image/*" 
                         onChange={handleFileUpload}
-                        style={{ display: 'none' }} // Hides the default ugly file input
+                        style={{ display: 'none' }} 
                     />
                 </div>
 
-                {/* Render All Photos */}
+                {/* POSTS with Hover Caption */}
                 {posts.map((post) => (
                     <div key={post.id} className="gallery-item">
                         <img src={post.image} alt="Post" className="gallery-image" />
+                        
+                        {/* Overlay that appears on hover */}
+                        <div className="gallery-overlay">
+                            <div className="overlay-text">
+                                {post.caption ? (
+                                    <p className="caption-text">{post.caption}</p>
+                                ) : (
+                                    <div className="stats">
+                                        <span>❤️ {post.likes}</span>
+                                        <span><FontAwesomeIcon icon={faComment} /> {post.comments}</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 ))}
             </div>
