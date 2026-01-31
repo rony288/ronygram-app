@@ -1,18 +1,14 @@
-import React from "react";
-import Posts from "./Posts";
-import './Posts.css';
-import Navigation from "./Navigation";
-import './Navigation.css';
-import Users from './Users';
+import React from 'react';
+import Posts from './Posts';
+import './App.css'; 
 
 const Home = () => {
-    return(
-        <div>
-            <Navigation/>
-            <Users/>
-            <Posts/>
+    return (
+        <div className="home-container">
+            {/* The Posts component handles the entire Feed + Create Post box */}
+            <Posts />
         </div>
-    )
-}
+    );
+};
 
 export default Home;
