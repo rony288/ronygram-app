@@ -1,15 +1,21 @@
+/* --- 1. The Card Container --- */
 .create-post-card {
     background: white;
     border-radius: 12px;
-    padding: 15px;
-    margin: 20px auto; /* Centers it */
-    max-width: 600px; /* Matches your feed width */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+    /* Soft shadow to make it float over the pattern */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); 
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    max-width: 500px; /* Matches feed width */
+    width: 100%;
 }
 
+/* --- 2. Input Area (Avatar + Text) --- */
 .input-group {
     display: flex;
     gap: 15px;
+    margin-bottom: 15px;
 }
 
 .user-avatar-small {
@@ -17,51 +23,96 @@
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #4b90ff; /* Blue ring */
+    border: 2px solid #e0f2fe; /* Light blue border */
 }
 
-textarea {
+/* Targeting the textarea inside the card */
+.create-post-card textarea {
     width: 100%;
     border: none;
-    outline: none;
     resize: none;
-    font-size: 16px;
     font-family: inherit;
-    margin-top: 10px;
+    font-size: 15px;
+    outline: none;
+    background: #fafafa;
+    padding: 12px;
+    border-radius: 12px;
+    color: #262626;
+    min-height: 60px;
+    transition: all 0.2s;
+}
+
+.create-post-card textarea:focus {
+    background: white;
+    box-shadow: 0 0 0 2px #e0f2fe; /* Blue glow on focus */
+}
+
+/* --- 3. Image Preview --- */
+.image-preview {
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #efefef;
 }
 
 .image-preview img {
     width: 100%;
-    border-radius: 8px;
-    margin-top: 10px;
+    height: auto;
+    display: block;
+    max-height: 300px;
+    object-fit: cover;
 }
 
+/* --- 4. Action Bar (Bottom Buttons) --- */
 .action-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px;
-    border-top: 1px solid #eee;
-    padding-top: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #efefef;
 }
 
+/* Photo Upload Button */
 .custom-file-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
-    color: #4b90ff;
+    font-size: 14px;
     font-weight: 600;
+    color: #0095f6; /* Blue text */
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
 }
 
+.custom-file-upload:hover {
+    background-color: #e0f2fe; /* Light blue hover background */
+}
+
+/* Post Button */
 .post-btn {
-    background: linear-gradient(135deg, #4b90ff 0%, #00d4ff 100%);
+    background: linear-gradient(135deg, #4b90ff 0%, #00d4ff 100%); /* Gemini Blue Gradient */
     color: white;
     border: none;
-    padding: 8px 20px;
+    padding: 8px 24px;
     border-radius: 20px;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 212, 255, 0.3);
+}
+
+.post-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 212, 255, 0.5);
 }
 
 .post-btn:disabled {
-    background: #ccc;
+    background: #b2dffc;
     cursor: not-allowed;
+    box-shadow: none;
 }
