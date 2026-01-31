@@ -5,20 +5,16 @@ import { faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 const CreatePost = ({ onPostCreate }) => {
     const [caption, setCaption] = useState('');
-    const [imageFile, setImageFile] = useState(null); // Stores the raw file
-    const [preview, setPreview] = useState(null); // Stores the Base64 string
+    const [preview, setPreview] = useState(null); 
+    // Removed "imageFile" state here because it was unused
 
-    // 1. UPDATED IMAGE HANDLER
-    // We use FileReader immediately so we have a permanent string to display and save
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setImageFile(file);
-            
-            // Convert to Base64 String
+            // We don't need to save the raw file anymore, just the preview
             const reader = new FileReader();
             reader.onloadend = () => {
-                setPreview(reader.result); // This result is the permanent string
+                setPreview(reader.result);
             };
             reader.readAsDataURL(file);
         }
@@ -31,10 +27,9 @@ const CreatePost = ({ onPostCreate }) => {
         const newPost = {
             id: Date.now(),
             user: {
-                username: "Ronaldkipkemboi", // You can make this dynamic later
-                avatar: require('../images/MyLove.jpeg') // Ensure this path is correct
+                username: "Ronaldkipkemboi", 
+                avatar: require('../images/MyLove.jpeg') 
             },
-            // 2. USE THE PERMANENT PREVIEW STRING
             image: preview || "https://via.placeholder.com/400", 
             description: caption,
             likes: 0,
@@ -46,7 +41,6 @@ const CreatePost = ({ onPostCreate }) => {
         
         // Reset form
         setCaption('');
-        setImageFile(null);
         setPreview(null);
     };
 
@@ -54,7 +48,6 @@ const CreatePost = ({ onPostCreate }) => {
         <div className="create-post-card">
             <form onSubmit={handleSubmit}>
                 <div className="input-group">
-                    {/* User Avatar */}
                     <img 
                         src={require('../images/MyLove.jpeg')} 
                         alt="Me" 
@@ -68,7 +61,6 @@ const CreatePost = ({ onPostCreate }) => {
                     />
                 </div>
 
-                {/* Image Preview Area */}
                 {preview && (
                     <div className="image-preview">
                         <img src={preview} alt="Preview" />
