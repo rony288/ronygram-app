@@ -5,7 +5,7 @@ import Home from './components/Home';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
 import Explore from './components/Explore';
-import './App.css'; // Fixed spacing here
+import '../App.css'; // Fixed spacing here
 
 function App() {
   return (
