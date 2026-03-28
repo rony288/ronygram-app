@@ -1,27 +1,26 @@
-'use strict';
-
 const express = require('express');
-const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-// MongoDB connection
-const mongoURI = 'your_mongo_db_connection_string_here';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.log(err));
-
-// Routes
-app.get('/api/test', (req, res) => {
-    res.json({ message: 'API is working!' });
+// Sample routes
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ message: 'API is running!' });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.post('/api/data', (req, res) => {
+    const data = req.body;
+    // Process data
+    res.status(201).json({ message: 'Data received', data });
+});
+
+// Start server
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
 });
