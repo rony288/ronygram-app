@@ -16,18 +16,14 @@ const SignUp = () => {
         e.preventDefault();
         setError('');
         setLoading(true);
-        const { error: authError } = await supabase.auth.signUp({
-            email,
-            password,
-            options: { data: { username } },
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: { data: { username: username } }
         });
         setLoading(false);
-        if (authError) {
-            setError(authError.message);
-            return;
-        }
-        alert('Sign-up successful! Please check your email for a confirmation link.');
-        navigate('/');
+        if (error) alert(error.message);
+        else alert('Success! Please check your email to confirm your account.');
     };
 
     return (
