@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
+import SignUp from './components/SignUp';
 import Home from './components/Home';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
@@ -25,8 +26,9 @@ function App() {
             <Router>
                 <div className="App">
                     <Routes>
-                        {/* Public route */}
+                        {/* Public routes */}
                         <Route path="/" element={<Login />} />
+                        <Route path="/signup" element={<SignUp />} />
 
                         {/* Protected routes */}
                         <Route path="/home" element={
