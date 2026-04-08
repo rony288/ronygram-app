@@ -101,9 +101,7 @@ const Profile = () => {
         reader.readAsDataURL(file);
     };
 
-    const avatarSrc = user?.avatar
-        ? (user.avatar.startsWith('/uploads') ? user.avatar : user.avatar)
-        : DEFAULT_AVATAR;
+    const avatarSrc = user?.avatar || DEFAULT_AVATAR;
 
     return (
         <div className="profile-container">

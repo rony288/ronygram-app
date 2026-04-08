@@ -8,9 +8,6 @@ import { faPaperPlane, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const DEFAULT_AVATAR = 'https://via.placeholder.com/40';
 
-// Singleton socket — created once, reused across renders
-let socket = null;
-
 const Chat = () => {
     const { userId: paramUserId } = useParams();
     const navigate = useNavigate();
@@ -23,42 +20,43 @@ const Chat = () => {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const messagesEndRef = useRef(null);
 
-    // --- Connect socket once, register current user ---
+    // Keep a ref to selectedUser so socket callbacks read the latest value
+    const selectedUserRef = useRef(selectedUser);
+    useEffect(() => {
+        selectedUserRef.current = selectedUser;
+    }, [selectedUser]);
+
+    // Socket instance stored in a ref so it persists across renders but isn't shared
+    const socketRef = useRef(null);
+
+    // --- Connect socket once per mount, register current user ---
     useEffect(() => {
         if (!user || !token) return;
 
-        // Connect to the backend (same host, different port handled by proxy)
-        socket = io({ path: '/socket.io', transports: ['websocket', 'polling'] });
+        const newSocket = io({ path: '/socket.io', transports: ['websocket', 'polling'] });
+        socketRef.current = newSocket;
 
-        socket.on('connect', () => {
-            socket.emit('register', user.id);
+        newSocket.on('connect', () => {
+            newSocket.emit('register', user.id);
         });
 
-        socket.on('receive_message', (msg) => {
-            // Only add message if it belongs to the currently open conversation
+        newSocket.on('receive_message', (msg) => {
             setMessages(prev => {
                 const isInConversation =
                     (msg.senderId === user.id && msg.receiverId === selectedUserRef.current?.id) ||
                     (msg.senderId === selectedUserRef.current?.id && msg.receiverId === user.id);
                 if (!isInConversation) return prev;
-                // Deduplicate (sender gets an echo back)
+                // Deduplicate (sender receives an echo back)
                 if (prev.some(m => m.id === msg.id)) return prev;
                 return [...prev, msg];
             });
         });
 
         return () => {
-            socket.disconnect();
-            socket = null;
+            newSocket.disconnect();
+            socketRef.current = null;
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user, token]);
-
-    // Keep a ref to selectedUser so the socket callback can read the latest value
-    const selectedUserRef = useRef(selectedUser);
-    useEffect(() => {
-        selectedUserRef.current = selectedUser;
-    }, [selectedUser]);
 
     // --- Load user list ---
     useEffect(() => {
@@ -68,7 +66,6 @@ const Chat = () => {
             .then(data => {
                 if (Array.isArray(data)) {
                     setUsers(data);
-                    // If a userId is in the URL, open that conversation
                     if (paramUserId) {
                         const found = data.find(u => u.id === paramUserId);
                         if (found) setSelectedUser(found);
@@ -104,8 +101,8 @@ const Chat = () => {
 
     const sendMessage = (e) => {
         e.preventDefault();
-        if (!input.trim() || !socket || !selectedUser) return;
-        socket.emit('send_message', {
+        if (!input.trim() || !socketRef.current || !selectedUser) return;
+        socketRef.current.emit('send_message', {
             senderId: user.id,
             receiverId: selectedUser.id,
             content: input.trim()
@@ -218,3 +215,4 @@ const Chat = () => {
 };
 
 export default Chat;
+

@@ -7,6 +7,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 const fs = require('fs');
 
@@ -19,9 +20,16 @@ const io = new Server(server, {
 const PORT = process.env.PORT || 5001;
 const JWT_SECRET = process.env.JWT_SECRET || 'ronygram_secret_key_2024';
 
+if (!process.env.JWT_SECRET) {
+    console.warn('[WARN] JWT_SECRET is not set. Using an insecure default. Set the JWT_SECRET environment variable before deploying to production.');
+}
+
+// --- Monotonic ID counter (avoids same-millisecond collisions) ---
+let _idCounter = 0;
+const nextId = () => `${Date.now()}-${++_idCounter}`;
+
 // --- In-Memory Stores ---
-// Maps: id (string) -> object
-const users = new Map();
+const users = new Map(); // id -> user object
 const messages = []; // { id, senderId, receiverId, content, timestamp }
 
 // --- Uploads Directory ---
@@ -33,12 +41,29 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use('/uploads', express.static(uploadsDir));
 
+// --- Rate Limiters ---
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests, please try again later.' }
+});
+
+const apiLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 120,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests, please try again later.' }
+});
+
 // --- Multer Config (avatar uploads, max 5 MB) ---
 const storage = multer.diskStorage({
     destination: uploadsDir,
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
-        cb(null, `avatar-${Date.now()}${ext}`);
+        cb(null, `avatar-${nextId()}${ext}`);
     }
 });
 const upload = multer({
@@ -69,7 +94,7 @@ const publicUser = (u) => ({
 // ============================================================
 
 // POST /api/auth/register
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', authLimiter, async (req, res) => {
     const { username, email, password } = req.body;
     if (!username || !email || !password) {
         return res.status(400).json({ error: 'All fields are required' });
@@ -79,7 +104,7 @@ app.post('/api/auth/register', async (req, res) => {
         if (u.email === email) return res.status(400).json({ error: 'Email already registered' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const id = Date.now().toString();
+    const id = nextId();
     const user = { id, username, email, password: hashedPassword, bio: '', avatar: null };
     users.set(id, user);
     const token = jwt.sign({ id, username }, JWT_SECRET, { expiresIn: '7d' });
@@ -87,7 +112,7 @@ app.post('/api/auth/register', async (req, res) => {
 });
 
 // POST /api/auth/login
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', authLimiter, async (req, res) => {
     const { username, password } = req.body;
     const user = Array.from(users.values()).find(u => u.username === username);
     if (!user) return res.status(400).json({ error: 'Invalid credentials' });
@@ -98,7 +123,7 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // GET /api/auth/me
-app.get('/api/auth/me', authMiddleware, (req, res) => {
+app.get('/api/auth/me', apiLimiter, authMiddleware, (req, res) => {
     const user = users.get(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(publicUser(user));
@@ -109,7 +134,7 @@ app.get('/api/auth/me', authMiddleware, (req, res) => {
 // ============================================================
 
 // GET /api/users  — list all users except self (for chat)
-app.get('/api/users', authMiddleware, (req, res) => {
+app.get('/api/users', apiLimiter, authMiddleware, (req, res) => {
     const list = Array.from(users.values())
         .filter(u => u.id !== req.user.id)
         .map(publicUser);
@@ -117,7 +142,7 @@ app.get('/api/users', authMiddleware, (req, res) => {
 });
 
 // PUT /api/users/profile  — update bio / username / email
-app.put('/api/users/profile', authMiddleware, (req, res) => {
+app.put('/api/users/profile', apiLimiter, authMiddleware, (req, res) => {
     const { username, bio, email } = req.body;
     const user = users.get(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
@@ -136,7 +161,7 @@ app.put('/api/users/profile', authMiddleware, (req, res) => {
 });
 
 // POST /api/users/avatar  — upload profile picture
-app.post('/api/users/avatar', authMiddleware, upload.single('avatar'), (req, res) => {
+app.post('/api/users/avatar', apiLimiter, authMiddleware, upload.single('avatar'), (req, res) => {
     const user = users.get(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
@@ -150,7 +175,7 @@ app.post('/api/users/avatar', authMiddleware, upload.single('avatar'), (req, res
 // ============================================================
 
 // GET /api/chat/:userId  — message history between me and userId
-app.get('/api/chat/:userId', authMiddleware, (req, res) => {
+app.get('/api/chat/:userId', apiLimiter, authMiddleware, (req, res) => {
     const myId = req.user.id;
     const otherId = req.params.userId;
     const conversation = messages
@@ -175,18 +200,16 @@ app.get('/api/health', (req, res) => {
 const connectedUsers = new Map(); // userId -> socketId
 
 io.on('connection', (socket) => {
-    // Register the authenticated user's socket
     socket.on('register', (userId) => {
         connectedUsers.set(userId, socket.id);
         socket.userId = userId;
     });
 
-    // Handle sending a message
     socket.on('send_message', (data) => {
         const { senderId, receiverId, content } = data;
         if (!senderId || !receiverId || !content) return;
         const message = {
-            id: Date.now().toString(),
+            id: nextId(),
             senderId,
             receiverId,
             content,
@@ -194,12 +217,10 @@ io.on('connection', (socket) => {
         };
         messages.push(message);
 
-        // Deliver to the receiver if they are online
         const receiverSocket = connectedUsers.get(receiverId);
         if (receiverSocket) {
             io.to(receiverSocket).emit('receive_message', message);
         }
-        // Echo back to the sender so their UI updates too
         socket.emit('receive_message', message);
     });
 

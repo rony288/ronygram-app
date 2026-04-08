@@ -21,9 +21,7 @@ const Navigation = () => {
         navigate('/');
     };
 
-    const avatarSrc = user?.avatar
-        ? (user.avatar.startsWith('http') ? user.avatar : user.avatar)
-        : DEFAULT_AVATAR;
+    const avatarSrc = user?.avatar || DEFAULT_AVATAR;
 
     return (
         <nav className="navbar-spider">
