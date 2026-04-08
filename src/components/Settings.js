@@ -1,25 +1,29 @@
 import React from 'react';
-import './Settings.css'; // We will create this next
+import './Settings.css';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Settings = () => {
     const navigate = useNavigate();
+    const { logout } = useAuth();
 
     const handleReset = () => {
-        if (window.confirm("Are you sure? This will delete all posts and profile photos.")) {
-            // 1. Clear Local Storage
+        if (window.confirm('Are you sure? This will delete all posts and profile photos.')) {
             localStorage.removeItem('ronygram_posts');
             localStorage.removeItem('ronygram_profile_posts');
-            
-            // 2. Refresh the page to apply changes
             window.location.reload();
         }
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
     };
 
     return (
         <div className="settings-container">
             <h2>Settings</h2>
-            
+
             <div className="settings-section">
                 <h3>Storage & Data</h3>
                 <p>If your images are going white or broken, try resetting the data.</p>
@@ -30,7 +34,7 @@ const Settings = () => {
 
             <div className="settings-section">
                 <h3>Account</h3>
-                <button className="logout-btn" onClick={() => navigate('/')}>
+                <button className="logout-btn" onClick={handleLogout}>
                     Log Out
                 </button>
             </div>
@@ -39,3 +43,4 @@ const Settings = () => {
 };
 
 export default Settings;
+

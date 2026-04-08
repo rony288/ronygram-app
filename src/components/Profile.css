@@ -304,3 +304,118 @@
     .profile-gallery { gap: 3px; }
     .gallery-item { border-radius: 0; }
 }
+
+/* --- Avatar Upload Overlay --- */
+.avatar-wrapper {
+    position: relative;
+}
+.avatar-upload-label {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+.avatar-upload-label:hover {
+    background: rgba(0,0,0,0.8);
+}
+
+/* --- Edit Profile Modal --- */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+.modal-card {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 480px;
+    padding: 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #8e8e8e;
+    padding: 4px;
+}
+.modal-field {
+    margin-bottom: 16px;
+}
+.modal-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 4px;
+}
+.modal-field input,
+.modal-field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fafafa;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: inherit;
+    transition: border 0.2s;
+}
+.modal-field input:focus,
+.modal-field textarea:focus {
+    border-color: #a5a5a5;
+    outline: none;
+    background: white;
+}
+.modal-error {
+    color: #ed4956;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+.modal-save-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #4b90ff 0%, #00d4ff 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.modal-save-btn:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+.modal-save-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}

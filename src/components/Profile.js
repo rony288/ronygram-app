@@ -1,95 +1,154 @@
 import React, { useState, useEffect } from 'react';
-import './Profile.css'; 
+import './Profile.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTh, faBookmark, faUserTag, faCog, faArrowLeft, faPlus, faComment, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faTh, faBookmark, faUserTag, faCog, faPlus, faComment, faHeart, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+const DEFAULT_AVATAR = 'https://via.placeholder.com/150';
 
 const Profile = () => {
     const navigate = useNavigate();
+    const { user, token, updateUser } = useAuth();
 
-    // 1. INITIALIZE STATE FROM LOCAL STORAGE
-    // Check if we have saved profile posts. If not, start empty.
     const [posts, setPosts] = useState(() => {
-        const savedProfilePosts = localStorage.getItem('ronygram_profile_posts');
-        return savedProfilePosts ? JSON.parse(savedProfilePosts) : [];
+        const saved = localStorage.getItem('ronygram_profile_posts');
+        return saved ? JSON.parse(saved) : [];
     });
 
-    // 2. SAVE TO LOCAL STORAGE
-    // Whenever 'posts' changes (you upload a new one), save it.
+    // Edit-profile modal state
+    const [editOpen, setEditOpen] = useState(false);
+    const [editUsername, setEditUsername] = useState('');
+    const [editBio, setEditBio] = useState('');
+    const [editEmail, setEditEmail] = useState('');
+    const [editError, setEditError] = useState('');
+    const [editLoading, setEditLoading] = useState(false);
+
     useEffect(() => {
         localStorage.setItem('ronygram_profile_posts', JSON.stringify(posts));
     }, [posts]);
 
-    // 3. UPLOAD FUNCTION
-    const handleFileUpload = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            // Ask for a caption
-            const caption = window.prompt("Write a caption for your post:");
-            
-            // If user clicked cancel, don't upload
-            if (caption === null) return; 
+    // Open the edit modal pre-filled with current values
+    const openEdit = () => {
+        setEditUsername(user?.username || '');
+        setEditBio(user?.bio || '');
+        setEditEmail(user?.email || '');
+        setEditError('');
+        setEditOpen(true);
+    };
 
-            // Create a URL for the image
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const newPost = { 
-                    id: Date.now(), 
-                    image: reader.result, // We use FileReader to save the string locally
-                    caption: caption || "", // Save the caption!
-                    likes: 0,
-                    comments: 0
-                };
-                // Add to the list
-                setPosts([newPost, ...posts]); 
-            };
-            reader.readAsDataURL(file);
+    const saveProfile = async (e) => {
+        e.preventDefault();
+        setEditLoading(true);
+        setEditError('');
+        try {
+            const res = await fetch('/api/users/profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ username: editUsername, bio: editBio, email: editEmail })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Update failed');
+            updateUser(data);
+            setEditOpen(false);
+        } catch (err) {
+            setEditError(err.message);
+        } finally {
+            setEditLoading(false);
         }
     };
 
+    // Avatar upload
+    const handleAvatarUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('avatar', file);
+        try {
+            const res = await fetch('/api/users/avatar', {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` },
+                body: formData
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Upload failed');
+            updateUser(data);
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+    // Post gallery upload
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const caption = window.prompt('Write a caption for your post:');
+        if (caption === null) return;
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const newPost = {
+                id: Date.now(),
+                image: reader.result,
+                caption: caption || '',
+                likes: 0,
+                comments: 0
+            };
+            setPosts(prev => [newPost, ...prev]);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const avatarSrc = user?.avatar
+        ? (user.avatar.startsWith('/uploads') ? user.avatar : user.avatar)
+        : DEFAULT_AVATAR;
+
     return (
         <div className="profile-container">
-            {/* Back Button */}
-            <button className="back-home-btn" onClick={() => navigate('/home')}>
-                <FontAwesomeIcon icon={faArrowLeft} /> Back to Feed
-            </button>
-
             {/* Header */}
             <div className="profile-header">
                 <div className="profile-image-section">
                     <div className="avatar-wrapper">
-                        <img 
-                            src={require('../images/MyLove.jpeg')} 
-                            alt="Profile" 
+                        <img
+                            src={avatarSrc}
+                            alt="Profile"
                             className="profile-main-img"
-                            onError={(e) => {e.target.src = 'https://via.placeholder.com/150'}}
+                            onError={(e) => { e.target.src = DEFAULT_AVATAR; }}
+                        />
+                        {/* Camera overlay to change avatar */}
+                        <label htmlFor="avatar-upload" className="avatar-upload-label" title="Change photo">
+                            📷
+                        </label>
+                        <input
+                            id="avatar-upload"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleAvatarUpload}
+                            style={{ display: 'none' }}
                         />
                     </div>
                 </div>
 
                 <div className="profile-info-section">
                     <div className="profile-row-1">
-                        <h2 className="profile-username">ronaldkipkemboi</h2>
-                        <button className="edit-profile-btn">Edit Profile</button>
-                        <FontAwesomeIcon icon={faCog} className="settings-icon" />
+                        <h2 className="profile-username">{user?.username || 'loading…'}</h2>
+                        <button className="edit-profile-btn" onClick={openEdit}>Edit Profile</button>
+                        <FontAwesomeIcon icon={faCog} className="settings-icon" onClick={() => navigate('/settings')} style={{ cursor: 'pointer' }} />
                     </div>
 
                     <div className="profile-row-2">
                         <span><strong>{posts.length}</strong> posts</span>
-                        <span><strong>1.5k</strong> followers</span>
-                        <span><strong>342</strong> following</span>
+                        <span><strong>—</strong> followers</span>
+                        <span><strong>—</strong> following</span>
                     </div>
 
                     <div className="profile-row-3">
-                        <h3 className="profile-real-name">Ronald Kipkemboi</h3>
+                        <h3 className="profile-real-name">{user?.username}</h3>
                         <p className="profile-bio">
-                            Software Engineer 🚀<br />
-                            Building RonyGram with React & ❤️<br />
-                            Capturing memories in code.
+                            {user?.bio || 'No bio yet. Click "Edit Profile" to add one.'}
                         </p>
-                        <a href="https://github.com/rony288" className="profile-link" target="_blank" rel="noreferrer">
-                            github.com/rony288
-                        </a>
                     </div>
                 </div>
             </div>
@@ -110,10 +169,8 @@ const Profile = () => {
                 </div>
             </div>
 
-            {/* Grid */}
+            {/* Gallery */}
             <div className="profile-gallery">
-                
-                {/* UPLOAD BOX */}
                 <div className="gallery-item upload-box">
                     <label htmlFor="file-upload" className="upload-label">
                         <div className="icon-circle">
@@ -121,21 +178,18 @@ const Profile = () => {
                         </div>
                         <span>Add Photo</span>
                     </label>
-                    <input 
-                        id="file-upload" 
-                        type="file" 
-                        accept="image/*" 
+                    <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*"
                         onChange={handleFileUpload}
-                        style={{ display: 'none' }} 
+                        style={{ display: 'none' }}
                     />
                 </div>
 
-                {/* POSTS */}
                 {posts.map((post) => (
                     <div key={post.id} className="gallery-item">
                         <img src={post.image} alt="Post" className="gallery-image" />
-                        
-                        {/* THIS OVERLAY SHOWS THE CAPTION ON HOVER */}
                         <div className="gallery-overlay">
                             <div className="overlay-text">
                                 {post.caption ? (
@@ -151,8 +205,55 @@ const Profile = () => {
                     </div>
                 ))}
             </div>
+
+            {/* Edit Profile Modal */}
+            {editOpen && (
+                <div className="modal-backdrop" onClick={() => setEditOpen(false)}>
+                    <div className="modal-card" onClick={e => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Edit Profile</h3>
+                            <button className="modal-close-btn" onClick={() => setEditOpen(false)}>
+                                <FontAwesomeIcon icon={faTimes} />
+                            </button>
+                        </div>
+                        <form onSubmit={saveProfile}>
+                            <div className="modal-field">
+                                <label>Username</label>
+                                <input
+                                    type="text"
+                                    value={editUsername}
+                                    onChange={e => setEditUsername(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="modal-field">
+                                <label>Email</label>
+                                <input
+                                    type="email"
+                                    value={editEmail}
+                                    onChange={e => setEditEmail(e.target.value)}
+                                />
+                            </div>
+                            <div className="modal-field">
+                                <label>Bio</label>
+                                <textarea
+                                    value={editBio}
+                                    onChange={e => setEditBio(e.target.value)}
+                                    rows={3}
+                                    placeholder="Tell people about yourself…"
+                                />
+                            </div>
+                            {editError && <p className="modal-error">{editError}</p>}
+                            <button type="submit" className="modal-save-btn" disabled={editLoading}>
+                                {editLoading ? 'Saving…' : 'Save Changes'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
 export default Profile;
+
