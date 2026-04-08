@@ -1,20 +1,27 @@
-import React from 'react'; // Fixed: Removed unused {useState, useEffect}
+import React from 'react';
 import './Navigation.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faMagnifyingGlass, faUser, faGear, faComment, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'; 
+import { faHouse, faMagnifyingGlass, faUser, faGear, faComment, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../context/AuthContext';
 
-const Navigation = ({username}) => {
-    // You are using React.useState here, so the import above wasn't needed
+const DEFAULT_AVATAR = 'https://via.placeholder.com/45';
+
+const Navigation = () => {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
     const [dropdownVisible, setDropdownVisible] = React.useState(false);
 
-    const toggleDropdown = () => {
-        setDropdownVisible(!dropdownVisible);
+    const toggleDropdown = () => setDropdownVisible(v => !v);
+    const closeDropdown = () => setDropdownVisible(false);
+
+    const handleLogout = () => {
+        closeDropdown();
+        logout();
+        navigate('/');
     };
 
-    const handleDropdownClose = () => {
-        setDropdownVisible(false);
-    };
+    const avatarSrc = user?.avatar || DEFAULT_AVATAR;
 
     return (
         <nav className="navbar-spider">
@@ -22,30 +29,39 @@ const Navigation = ({username}) => {
                 <span id="nav-title"><b>RONY</b>GRAM</span>
             </div>
             <div className="navbar-toggle">
-                <span>{username}</span>
-                <img className="img-nav" 
-                src={require('../images/MyLove.jpeg')} 
-                alt="User"
-                onClick={toggleDropdown}/>
-                
-            <div className={dropdownVisible ? 'dropdown-menu show' : 'dropdown-menu'}>
-                <Link to="/home" onClick={handleDropdownClose}>
-                    <FontAwesomeIcon icon={faHouse} style={{ marginRight: '5px'}} />  Home</Link>
-                <Link to="/explore" onClick={handleDropdownClose}>
-                    <FontAwesomeIcon icon={faMagnifyingGlass} style={{ marginRight: '5px'}}/> Explore</Link>
-                <Link to="/profile" onClick={handleDropdownClose}>
-                    <FontAwesomeIcon icon={faUser} style={{ marginRight: '5px'}}/>Profile</Link>
-                <Link to="/settings" onClick={handleDropdownClose}>
-                    <FontAwesomeIcon icon={faGear} style={{ marginRight: '5px'}}/>Settings</Link>
-                <Link to="/chat" onClick={handleDropdownClose}>
-                    <FontAwesomeIcon icon={faComment} style={{ marginRight: '5px'}}/>Chat</Link>
-                <Link to="/" onClick={handleDropdownClose}>
-                    <FontAwesomeIcon icon={faRightFromBracket} style={{ marginRight: '5px'}}/>Logout</Link>
-                </div>
-                </div>
-                </nav>
+                <span>{user?.username}</span>
+                <img
+                    className="img-nav"
+                    src={avatarSrc}
+                    alt="User"
+                    onClick={toggleDropdown}
+                    onError={(e) => { e.target.src = DEFAULT_AVATAR; }}
+                />
 
+                <div className={dropdownVisible ? 'dropdown-menu show' : 'dropdown-menu'}>
+                    <Link to="/home" onClick={closeDropdown}>
+                        <FontAwesomeIcon icon={faHouse} style={{ marginRight: '5px' }} /> Home
+                    </Link>
+                    <Link to="/explore" onClick={closeDropdown}>
+                        <FontAwesomeIcon icon={faMagnifyingGlass} style={{ marginRight: '5px' }} /> Explore
+                    </Link>
+                    <Link to="/profile" onClick={closeDropdown}>
+                        <FontAwesomeIcon icon={faUser} style={{ marginRight: '5px' }} /> Profile
+                    </Link>
+                    <Link to="/settings" onClick={closeDropdown}>
+                        <FontAwesomeIcon icon={faGear} style={{ marginRight: '5px' }} /> Settings
+                    </Link>
+                    <Link to="/chat" onClick={closeDropdown}>
+                        <FontAwesomeIcon icon={faComment} style={{ marginRight: '5px' }} /> Chat
+                    </Link>
+                    <button className="nav-logout-btn" onClick={handleLogout}>
+                        <FontAwesomeIcon icon={faRightFromBracket} style={{ marginRight: '5px' }} /> Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
     );
 };
 
 export default Navigation;
+

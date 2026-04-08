@@ -93,3 +93,23 @@
 .dropdown-menu.show {
     display: block;
 }
+
+.nav-logout-btn {
+    display: block;
+    width: 100%;
+    padding: 8px 20px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #ed4956;
+    background: none;
+    border: none;
+    border-top: 1px solid #f0f0f0;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.nav-logout-btn:hover {
+    background-color: #fff5f5;
+}

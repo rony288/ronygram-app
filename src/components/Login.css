@@ -4,39 +4,81 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    /* CRITICAL: Transparent allows the fancy App background to show through */
-    background-color: transparent; 
+    background-color: transparent;
 }
 
 /* --- 2. The Login Card --- */
-.login-form {
+.login-card {
     background-color: white;
     padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* Soft modern shadow */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     width: 100%;
     max-width: 400px;
     text-align: center;
     border: 1px solid rgba(0,0,0,0.05);
 }
 
-.login-form h2 {
+.login-card h2 {
     margin-top: 0;
     color: #333;
     font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
 }
 
-/* --- 3. Inputs --- */
+/* --- Auth Tabs --- */
+.auth-tabs {
+    display: flex;
+    border-bottom: 1px solid #dbdbdb;
+    margin-bottom: 24px;
+}
+
+.auth-tab {
+    flex: 1;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 10px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #8e8e8e;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+}
+
+.auth-tab.active {
+    color: #262626;
+    border-bottom-color: #262626;
+}
+
+/* --- 3. Form --- */
+.login-form {
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 4px;
+}
+
 .login-form input {
     width: 100%;
     padding: 12px 15px;
-    margin: 10px 0;
     border: 1px solid #dbdbdb;
     border-radius: 8px;
     font-size: 15px;
     background-color: #fafafa;
     transition: all 0.2s ease;
-    box-sizing: border-box; /* Prevents padding from breaking width */
+    box-sizing: border-box;
 }
 
 .login-form input:focus {
@@ -53,7 +95,7 @@
     margin-top: 20px;
 }
 
-.login-form button {
+.login-btn {
     flex: 1;
     padding: 12px;
     border: none;
@@ -62,41 +104,34 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-}
-
-/* --- 5. "Gemini Blue" Login Button --- */
-.login-form button[type="submit"] {
     background: linear-gradient(135deg, #4b90ff 0%, #00d4ff 100%);
     color: white;
     box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
 }
 
-.login-form button[type="submit"]:hover {
+.login-btn:hover:not(:disabled) {
     background: linear-gradient(135deg, #0078ff 0%, #00b4d8 100%);
     box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
     transform: translateY(-2px);
 }
 
-/* --- 6. Guest Button --- */
-.guest-btn {
-    background-color: #f0f2f5;
-    color: #444;
-}
-
-.guest-btn:hover {
-    background-color: #e4e6eb;
-    transform: translateY(-2px);
+.login-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 /* --- 7. Error & Helper Text --- */
-.error-message {
+.error-msg {
     color: #ed4956;
     margin-top: 15px;
     font-size: 14px;
+    text-align: center;
 }
 
-p {
-    font-size: 0.9rem;
+.helper-text {
+    font-size: 0.85rem;
     color: #8e8e8e;
-    margin-top: 20px;
+    margin-top: 16px;
+    text-align: center;
 }
+
